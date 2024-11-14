@@ -73,7 +73,10 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
         uint256 _tokenId,
         uint256 _price,
         address _hostContract
-    ) external {
+    ) 
+    external 
+    nonReentrant
+    {
         EventTicket hostContract = EventTicket(_hostContract);
         NftDetails storage info = nftInfo[msg.sender][_tokenId];
 
@@ -97,7 +100,10 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
         emit ListNFT(msg.sender, _tokenId, _hostContract, _price, info.isListed);
     }
 
-    function unListNft(uint256 _tokenId) external {
+    function unListNft(uint256 _tokenId) 
+    external 
+    nonReentrant
+    {
         require(
             nftInfo[msg.sender][_tokenId].seller == msg.sender,
             "Only Seller can unList his own Nft"
@@ -110,7 +116,9 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
         delete nftInfo[msg.sender][_tokenId];
     }
 
-    function _unListNft(uint256 _tokenId) internal {
+    function _unListNft(uint256 _tokenId) 
+    internal 
+    {
 
         address _hostContract = nftInfo[msg.sender][_tokenId].hostContract;
 
@@ -133,7 +141,11 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
         uint256 _tokenId,
         address _seller,
         address _hostContract
-    ) external payable {
+    ) 
+    external 
+    payable 
+    nonReentrant
+    {
         require(nftInfo[_seller][_tokenId].isListed, "Nft: Not Listed");
         require(nftInfo[_seller][_tokenId].tokenID ==_tokenId , "Invalid Token ID");
         require(nftInfo[_seller][_tokenId].seller == _seller, "InValid Seller");
@@ -150,7 +162,7 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
             _tokenId,
             msg.sender,
             _hostContract,
-            nftInfo[_seller][_tokenId].nftPrice,
+            msg.value,
             _seller
         );
 
@@ -159,7 +171,15 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
         delete nftInfo[_seller][_tokenId];
     }
 
-    function createOffer(uint256 _tokenId, uint256 _offerPrice, uint256 _offerExpiry, address _seller) external payable nonReentrant
+    function createOffer(
+        uint256 _tokenId, 
+        uint256 _offerPrice, 
+        uint256 _offerExpiry, 
+        address _seller
+    ) 
+    external 
+    payable 
+    nonReentrant
     {
         NftDetails memory info = nftInfo[_seller][_tokenId];  
         offerDetails storage details = offererInfo[msg.sender];
@@ -181,7 +201,12 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
         );
     }
 
-    function acceptOffers(uint256 _tokenId, address _buyer) external nonReentrant
+    function acceptOffers(
+        uint256 _tokenId, 
+        address _buyer
+    ) 
+    external 
+    nonReentrant
     {
         NftDetails memory info = nftInfo[msg.sender][_tokenId];  
         offerDetails memory details = offererInfo[_buyer];
@@ -210,7 +235,12 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
         delete offererInfo[_buyer];
     }
 
-    function rejectOffer(uint256 _tokenId, address _buyer) external nonReentrant
+    function rejectOffer(
+        uint256 _tokenId, 
+        address _buyer
+    ) 
+    external 
+    nonReentrant
     {
         offerDetails memory details = offererInfo[_buyer];
         NftDetails memory info = nftInfo[msg.sender][_tokenId];  
@@ -225,7 +255,9 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
         delete offererInfo[_buyer];
     }
 
-    function cancelOffer(uint256 _tokenId) external nonReentrant
+    function cancelOffer(uint256 _tokenId) 
+    external 
+    nonReentrant
     {
         offerDetails memory details = offererInfo[msg.sender];
         require(details.tokenID == _tokenId, "This token has no offer");
