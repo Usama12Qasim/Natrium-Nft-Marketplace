@@ -23,7 +23,7 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
         bool isListed;
     }
 
-    struct offerDetails {
+    struct OfferDetails {
         address buyer;
         uint256 tokenID;
         uint256 offerPrice;
@@ -32,7 +32,7 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
     }
 
     mapping(address => mapping(uint256 => NftDetails)) nftInfo;
-    mapping(address => offerDetails) offererInfo;
+    mapping(address => OfferDetails) offererInfo;
 
     uint8 private serviceFees;
 
@@ -182,7 +182,7 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
     nonReentrant
     {
         NftDetails memory info = nftInfo[_seller][_tokenId];  
-        offerDetails storage details = offererInfo[msg.sender];
+        OfferDetails storage details = offererInfo[msg.sender];
 
         require(info.tokenID == _tokenId, "This token is not Listed");
         require(info.seller == _seller, "InValid Address");
@@ -209,12 +209,14 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
     nonReentrant
     {
         NftDetails memory info = nftInfo[msg.sender][_tokenId];  
-        offerDetails memory details = offererInfo[_buyer];
+        OfferDetails memory details = offererInfo[_buyer];
 
         require(info.seller == msg.sender, "Only Seller can accept the offer");
         require(details.offerPrice > 0, "Offer rejected");
         require(block.timestamp < details.offerExpire, "Offer Expired");
         require(details.tokenID == _tokenId, "This token has no offer");
+
+        offererInfo[_buyer].currentOffer = Offer(1);
         
         _transferNftAndFee(
             _tokenId, 
@@ -242,13 +244,15 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
     external 
     nonReentrant
     {
-        offerDetails memory details = offererInfo[_buyer];
+        OfferDetails memory details = offererInfo[_buyer];
         NftDetails memory info = nftInfo[msg.sender][_tokenId];  
 
         require(details.offerPrice > 0, "No Offer has received on this token");
         require(details.buyer == _buyer, "InValid Buyer Address");
         require(msg.sender == info.seller, "Only Seller can reject this offer");
         require(details.tokenID == _tokenId, "InValid token Id");
+
+        offererInfo[_buyer].currentOffer = Offer(2);
 
         payable(details.buyer).transfer(details.offerPrice);
 
@@ -259,7 +263,7 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
     external 
     nonReentrant
     {
-        offerDetails memory details = offererInfo[msg.sender];
+        OfferDetails memory details = offererInfo[msg.sender];
         require(details.tokenID == _tokenId, "This token has no offer");
         require(details.offerPrice > 0, "Error: Offer cannot Cancel");
         require(msg.sender == details.buyer, "Only Offer placed user cancel this offer");
@@ -292,6 +296,16 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
         _transferAmountToSeller(_price, serviceFees, _seller);
 
         hostContract.safeTransferFrom(address(this), _buyerAddress, _tokenId);
+    }
+
+    function getNftDetails(uint256 _tokenId) public view returns(NftDetails memory)
+    {
+        return nftInfo[msg.sender][_tokenId];
+    }
+
+    function getOfferDetails(address _buyer) public view returns(OfferDetails memory)
+    {
+        return offererInfo[_buyer];
     }
 
     function onERC721Received(
