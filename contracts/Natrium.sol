@@ -6,10 +6,9 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 contract NatriumInternalCalculations is Initializable, OwnableUpgradeable
 {
+    address public contractOwner;
     event transferServiceFees(address owner, uint serviceFees);
     event transferNftPrice(address seller, uint256 nftPrice, uint256 timeStamp);
-    address public contractOwner;
-
     
     function initialize() public virtual onlyInitializing {
         contractOwner = msg.sender;
@@ -35,9 +34,6 @@ contract NatriumInternalCalculations is Initializable, OwnableUpgradeable
     function _marketplaceServiceFess(uint256 _price, uint8 _serviceFess) internal returns(uint256)
     {
         uint serviceFeeAmount = (_price * _serviceFess) / 100;
-
-        require(contractOwner != address(0), "Contract owner not set");
-        
         payable(contractOwner).transfer(serviceFeeAmount);
 
         emit transferServiceFees(contractOwner, serviceFeeAmount);

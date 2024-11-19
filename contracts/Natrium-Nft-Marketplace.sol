@@ -157,10 +157,10 @@ contract NatirumMarketplace is
             msg.value == nftInfo[_seller][_tokenId].nftPrice,
             "InSufficient Amount"
         );
-        // require(
-        //     msg.sender == nftInfo[_seller][_tokenId].seller ,
-        //     "Can't Self buy"
-        // );
+        require(
+            msg.sender != nftInfo[_seller][_tokenId].seller ,
+            "Can't Self buy"
+        );
 
         _transferNftAndFee(
             _tokenId,
@@ -188,7 +188,7 @@ contract NatirumMarketplace is
         NftDetails memory info = nftInfo[_seller][_tokenId];
         OfferDetails storage details = offererInfo[msg.sender];
 
-        require(info.tokenID == _tokenId, "This token is not Listed");
+        require(info.isListed, "This token is not Listed");
         require(info.seller == _seller, "InValid Address");
         require(_offerExpiry > block.timestamp, "Time Error");
         require(msg.value == _offerPrice, "Invalid amount");
