@@ -1,13 +1,13 @@
-//require("@nomiclabs/hardhat-ethers");
-require("@nomicfoundation/hardhat-toolbox");
+require("@nomiclabs/hardhat-ethers");
 require("dotenv").config();
-//require("@nomiclabs/hardhat-etherscan");
+require("@nomiclabs/hardhat-etherscan");
+require("@nomicfoundation/hardhat-chai-matchers");
 //require("@nomiclabs/hardhat-waffle");
-require("hardhat-gas-reporter");
-//require("hardhat-contract-sizer");
+//require("hardhat-gas-reporter");
+// require("hardhat-contract-sizer");
 //require('solidity-coverage');
 require("@openzeppelin/hardhat-upgrades");
-require("@nomicfoundation/hardhat-verify");
+//require("@nomicfoundation/hardhat-verify");
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
@@ -21,6 +21,13 @@ const BSC_API_KEY = process.env.BSC_API_KEY;
 module.exports = {
    solidity: {
       version: "0.8.26",
+      settings: {
+         viaIR: false,
+         optimizer: {
+            enabled: true,
+            runs: 200,
+         },
+      },
    },
 
    defaultNetwork: "hardhat",
@@ -48,20 +55,20 @@ module.exports = {
       //    gasLimit: 10000,
       // },
 
-      sepolia: {
-         url: `https://eth-sepolia.g.alchemy.com/v2/7VlDOMiN8n9ZsfwWTZbxr8KSzkpO8QzF`,
-         accounts: [PRIVATE_KEY],
-      },
-   },
+      //    sepolia: {
+      //       url: `https://eth-sepolia.g.alchemy.com/v2/7VlDOMiN8n9ZsfwWTZbxr8KSzkpO8QzF`,
+      //       accounts: [PRIVATE_KEY],
+      //    },
+      // },
 
-   etherscan: {
-      apiKey: {
-         goerli: GOERLI_API_KEY,
-         bscTestnet: BSC_API_KEY,
-         polygonMumbai: POLYGON_API_KEY,
-         avalancheFujiTestnet: AVALANCHE_API_KEY,
-         sepolia: SEPOLIA_API_KEY
-      },
+      // etherscan: {
+      //    apiKey: {
+      //       goerli: GOERLI_API_KEY,
+      //       bscTestnet: BSC_API_KEY,
+      //       polygonMumbai: POLYGON_API_KEY,
+      //       avalancheFujiTestnet: AVALANCHE_API_KEY,
+      //       sepolia: SEPOLIA_API_KEY
+      //    },
    },
 
    paths: {
