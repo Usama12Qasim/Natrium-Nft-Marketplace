@@ -1,5 +1,5 @@
 //SPDX-License-Identifier:MIT
-pragma solidity ^0.8.24;
+pragma solidity ^ 0.8.26;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
@@ -288,9 +288,10 @@ contract NatirumMarketplace is
     }
 
     function getNftDetails(
-        uint256 _tokenId
+        uint256 _tokenId,
+        address listerAddress
     ) public view returns (NftDetails memory) {
-        return nftInfo[msg.sender][_tokenId];
+        return nftInfo[listerAddress][_tokenId];
     }
 
     function getOfferDetails(

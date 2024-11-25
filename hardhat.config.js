@@ -1,13 +1,13 @@
 require("@nomiclabs/hardhat-ethers");
 require("dotenv").config();
-require("@nomiclabs/hardhat-etherscan");
+//require("@nomiclabs/hardhat-etherscan");
 require("@nomicfoundation/hardhat-chai-matchers");
 //require("@nomiclabs/hardhat-waffle");
 //require("hardhat-gas-reporter");
 // require("hardhat-contract-sizer");
 //require('solidity-coverage');
 require("@openzeppelin/hardhat-upgrades");
-//require("@nomicfoundation/hardhat-verify");
+require("@nomicfoundation/hardhat-verify");
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
@@ -33,42 +33,42 @@ module.exports = {
    defaultNetwork: "hardhat",
    networks: {
       hardhat: {},
-      // polygonAmoy: {
-      //    url: `https://polygon-amoy.g.alchemy.com/v2/KEqO1Xo32EGjs6a2bIk1fDBfHaX--Euv`,
-      //    accounts: [process.env.PRIVATE_KEY]
-      // },
+      polygonAmoy: {
+         url: `https://polygon-amoy.g.alchemy.com/v2/KEqO1Xo32EGjs6a2bIk1fDBfHaX--Euv`,
+         accounts: [process.env.PRIVATE_KEY]
+      },
 
-      // bscT: {
-      //    url: `https://rpc.ankr.com/bsc`,
-      //    accounts: [process.env.PRIVATE_KEY],
-      //    gasPrice: 20000000000,
-      // },
+      bscT: {
+         url: `https://rpc.ankr.com/bsc`,
+         accounts: [process.env.PRIVATE_KEY],
+         gasPrice: 20000000000,
+      },
 
-      // avalancheT: {
-      //    url: `https://rpc.ankr.com/avalanche_fuji`,
-      //    accounts: [process.env.PRIVATE_KEY],
-      // },
+      avalancheT: {
+         url: `https://rpc.ankr.com/avalanche_fuji`,
+         accounts: [process.env.PRIVATE_KEY],
+      },
 
-      // goerli: {
-      //    url: `https://rpc.ankr.com/eth_goerli`,
-      //    accounts: [process.env.PRIVATE_KEY],
-      //    gasLimit: 10000,
-      // },
+      goerli: {
+         url: `https://rpc.ankr.com/eth_goerli`,
+         accounts: [process.env.PRIVATE_KEY],
+         gasLimit: 10000,
+      },
 
-      //    sepolia: {
-      //       url: `https://eth-sepolia.g.alchemy.com/v2/7VlDOMiN8n9ZsfwWTZbxr8KSzkpO8QzF`,
-      //       accounts: [PRIVATE_KEY],
-      //    },
-      // },
+         sepolia: {
+            url: `https://eth-sepolia.g.alchemy.com/v2/7VlDOMiN8n9ZsfwWTZbxr8KSzkpO8QzF`,
+            accounts: [PRIVATE_KEY],
+         },
+      },
 
-      // etherscan: {
-      //    apiKey: {
-      //       goerli: GOERLI_API_KEY,
-      //       bscTestnet: BSC_API_KEY,
-      //       polygonMumbai: POLYGON_API_KEY,
-      //       avalancheFujiTestnet: AVALANCHE_API_KEY,
-      //       sepolia: SEPOLIA_API_KEY
-      //    },
+      etherscan: {
+         apiKey: {
+            goerli: GOERLI_API_KEY,
+            bscTestnet: BSC_API_KEY,
+            polygonMumbai: POLYGON_API_KEY,
+            avalancheFujiTestnet: AVALANCHE_API_KEY,
+            sepolia: SEPOLIA_API_KEY
+         },
    },
 
    paths: {
