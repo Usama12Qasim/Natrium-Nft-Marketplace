@@ -6,9 +6,10 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 contract NatriumInternalCalculations is Initializable, OwnableUpgradeable
 {
-    address public contractOwner;
     event transferServiceFees(address owner, uint serviceFees);
     event transferNftPrice(address seller, uint256 nftPrice, uint256 timeStamp);
+
+    address public contractOwner;
     
     function initialize() public virtual onlyInitializing {
         contractOwner = msg.sender;

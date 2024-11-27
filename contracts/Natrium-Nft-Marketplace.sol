@@ -6,7 +6,11 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./Natrium.sol";
 import "./TicktingContract.sol";
 
-contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
+contract NatirumMarketplace is
+    NatriumInternalCalculations,
+    ReentrancyGuard,
+    EventDeployer
+{
     enum Offer {
         makeOffer,
         acceptOffer,
@@ -78,10 +82,16 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
     function listNft(
         uint256 _tokenId,
         uint256 _price,
-        address _hostContract
+        address _hostContract,
+        address _newCollectionAddress
     ) external nonReentrant {
         EventTicket hostContract = EventTicket(_hostContract);
         NftDetails storage info = nftInfo[msg.sender];
+
+        require(
+            approvedContracts[_newCollectionAddress],
+            "Not approve by factory contract"
+        );
 
         require(
             hostContract.ownerOf(_tokenId) == msg.sender,
@@ -143,16 +153,18 @@ contract NatirumMarketplace is NatriumInternalCalculations, ReentrancyGuard {
         address _seller,
         address _hostContract
     ) external payable nonReentrant {
+        uint256 NftPrice = nftInfo[_seller].nftPrice;
+
         require(nftInfo[_seller].isListed, "Nft: Not Listed");
         require(nftInfo[_seller].seller == _seller, "Invalid Seller");
-        require(msg.value == nftInfo[_seller].nftPrice, "InSufficient Amount");
+        require(msg.value == NftPrice && NftPrice != 0, "InSufficient Amount");
         require(nftInfo[_seller].seller != msg.sender, "Can't Self buy");
 
         _transferNftAndFee(
             _tokenId,
             msg.sender,
             _hostContract,
-            msg.value,
+            NftPrice,
             _seller
         );
 
