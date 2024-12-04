@@ -55,20 +55,26 @@ module.exports = {
          gasLimit: 10000,
       },
 
-         sepolia: {
-            url: `https://eth-sepolia.g.alchemy.com/v2/7VlDOMiN8n9ZsfwWTZbxr8KSzkpO8QzF`,
-            accounts: [PRIVATE_KEY],
-         },
+      sepolia: {
+         url: `https://eth-sepolia.g.alchemy.com/v2/7VlDOMiN8n9ZsfwWTZbxr8KSzkpO8QzF`,
+         accounts: [PRIVATE_KEY],
       },
+   },
+   gasReporter: {
+      enabled: true,
+      currency: "ETH",
+      coinmarketcap: "762557d3-26ff-4bbf-867d-58ac55e039b8",
+      offline: false,
+   },
 
-      etherscan: {
-         apiKey: {
-            goerli: GOERLI_API_KEY,
-            bscTestnet: BSC_API_KEY,
-            polygonMumbai: POLYGON_API_KEY,
-            avalancheFujiTestnet: AVALANCHE_API_KEY,
-            sepolia: SEPOLIA_API_KEY
-         },
+   etherscan: {
+      apiKey: {
+         goerli: GOERLI_API_KEY,
+         bscTestnet: BSC_API_KEY,
+         polygonMumbai: POLYGON_API_KEY,
+         avalancheFujiTestnet: AVALANCHE_API_KEY,
+         sepolia: SEPOLIA_API_KEY
+      },
    },
 
    paths: {

@@ -2,7 +2,7 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\contracts\\EventDeployer.sol": {
-      "lastModificationDate": 1732703824933,
+      "lastModificationDate": 1733299305382,
       "contentHash": "fc151ac11c1a1baccb0584edcecc66d1",
       "sourceName": "contracts/EventDeployer.sol",
       "solcConfig": {
@@ -461,46 +461,6 @@
         "ERC165Upgradeable"
       ]
     },
-    "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\interfaces\\draft-IERC6093.sol": {
-      "lastModificationDate": 1731654353318,
-      "contentHash": "267d92fe4de67b1bdb3302c08f387dbf",
-      "sourceName": "@openzeppelin/contracts/interfaces/draft-IERC6093.sol",
-      "solcConfig": {
-        "version": "0.8.26",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "storageLayout"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "IERC1155Errors",
-        "IERC20Errors",
-        "IERC721Errors"
-      ]
-    },
     "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\utils\\Strings.sol": {
       "lastModificationDate": 1731654357253,
       "contentHash": "f4cc092958a3ddec1f4ed4103bfc54dd",
@@ -540,6 +500,46 @@
       ],
       "artifacts": [
         "Strings"
+      ]
+    },
+    "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\interfaces\\draft-IERC6093.sol": {
+      "lastModificationDate": 1731654353318,
+      "contentHash": "267d92fe4de67b1bdb3302c08f387dbf",
+      "sourceName": "@openzeppelin/contracts/interfaces/draft-IERC6093.sol",
+      "solcConfig": {
+        "version": "0.8.26",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC1155Errors",
+        "IERC20Errors",
+        "IERC721Errors"
       ]
     },
     "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721.sol": {
@@ -701,46 +701,6 @@
         "ERC721Utils"
       ]
     },
-    "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\utils\\math\\SignedMath.sol": {
-      "lastModificationDate": 1731654357150,
-      "contentHash": "ae3528afb8bdb0a7dcfba5b115ee8074",
-      "sourceName": "@openzeppelin/contracts/utils/math/SignedMath.sol",
-      "solcConfig": {
-        "version": "0.8.26",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "storageLayout"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./SafeCast.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "SignedMath"
-      ]
-    },
     "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\utils\\math\\Math.sol": {
       "lastModificationDate": 1731654356685,
       "contentHash": "2b2665ae9bdb1af440658741a77fe213",
@@ -782,10 +742,10 @@
         "Math"
       ]
     },
-    "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\utils\\math\\SafeCast.sol": {
-      "lastModificationDate": 1731654357014,
-      "contentHash": "2adca1150f58fc6f3d1f0a0f22ee7cca",
-      "sourceName": "@openzeppelin/contracts/utils/math/SafeCast.sol",
+    "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\utils\\math\\SignedMath.sol": {
+      "lastModificationDate": 1731654357150,
+      "contentHash": "ae3528afb8bdb0a7dcfba5b115ee8074",
+      "sourceName": "@openzeppelin/contracts/utils/math/SignedMath.sol",
       "solcConfig": {
         "version": "0.8.26",
         "settings": {
@@ -812,12 +772,14 @@
           }
         }
       },
-      "imports": [],
+      "imports": [
+        "./SafeCast.sol"
+      ],
       "versionPragmas": [
         "^0.8.20"
       ],
       "artifacts": [
-        "SafeCast"
+        "SignedMath"
       ]
     },
     "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\utils\\Panic.sol": {
@@ -856,6 +818,44 @@
       ],
       "artifacts": [
         "Panic"
+      ]
+    },
+    "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\utils\\math\\SafeCast.sol": {
+      "lastModificationDate": 1731654357014,
+      "contentHash": "2adca1150f58fc6f3d1f0a0f22ee7cca",
+      "sourceName": "@openzeppelin/contracts/utils/math/SafeCast.sol",
+      "solcConfig": {
+        "version": "0.8.26",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "SafeCast"
       ]
     },
     "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721Receiver.sol": {
@@ -1015,44 +1015,6 @@
         "IERC1967"
       ]
     },
-    "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\proxy\\beacon\\IBeacon.sol": {
-      "lastModificationDate": 1731654355887,
-      "contentHash": "0a5c323fd908535580597848b8e550fb",
-      "sourceName": "@openzeppelin/contracts/proxy/beacon/IBeacon.sol",
-      "solcConfig": {
-        "version": "0.8.26",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "storageLayout"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "IBeacon"
-      ]
-    },
     "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\utils\\StorageSlot.sol": {
       "lastModificationDate": 1731654357242,
       "contentHash": "e656d64c4ce918f3d13030b91c935134",
@@ -1089,6 +1051,44 @@
       ],
       "artifacts": [
         "StorageSlot"
+      ]
+    },
+    "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\proxy\\beacon\\IBeacon.sol": {
+      "lastModificationDate": 1731654355887,
+      "contentHash": "0a5c323fd908535580597848b8e550fb",
+      "sourceName": "@openzeppelin/contracts/proxy/beacon/IBeacon.sol",
+      "solcConfig": {
+        "version": "0.8.26",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IBeacon"
       ]
     },
     "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\utils\\Errors.sol": {
@@ -1170,44 +1170,6 @@
         "IERC1363"
       ]
     },
-    "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\interfaces\\IERC20.sol": {
-      "lastModificationDate": 1731654356127,
-      "contentHash": "79af12d64eacc7d77b9ee2ac4b4d51ee",
-      "sourceName": "@openzeppelin/contracts/interfaces/IERC20.sol",
-      "solcConfig": {
-        "version": "0.8.26",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "storageLayout"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../token/ERC20/IERC20.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": []
-    },
     "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\interfaces\\IERC165.sol": {
       "lastModificationDate": 1731654356061,
       "contentHash": "f808b485ee0cdc6768ee8385ae5f9a2a",
@@ -1246,9 +1208,47 @@
       ],
       "artifacts": []
     },
+    "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\interfaces\\IERC20.sol": {
+      "lastModificationDate": 1731654356127,
+      "contentHash": "79af12d64eacc7d77b9ee2ac4b4d51ee",
+      "sourceName": "@openzeppelin/contracts/interfaces/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.26",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": []
+    },
     "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\contracts\\Natrium-Nft-Marketplace.sol": {
-      "lastModificationDate": 1732877721027,
-      "contentHash": "74c4ca65f256e3c3f53cd8a124b59ab3",
+      "lastModificationDate": 1733317495959,
+      "contentHash": "cb45dcb775de07684e75a7bcb2f8380a",
       "sourceName": "contracts/Natrium-Nft-Marketplace.sol",
       "solcConfig": {
         "version": "0.8.26",
@@ -1280,7 +1280,8 @@
         "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
         "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol",
         "./Natrium.sol",
-        "./TicktingContract.sol"
+        "./TicktingContract.sol",
+        "./EventDeployer.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
@@ -1290,7 +1291,7 @@
       ]
     },
     "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\contracts\\Natrium.sol": {
-      "lastModificationDate": 1732708817925,
+      "lastModificationDate": 1733121918435,
       "contentHash": "cbcf720c62bfda9c2465a89d0104dd0a",
       "sourceName": "contracts/Natrium.sol",
       "solcConfig": {
@@ -1328,44 +1329,6 @@
       ],
       "artifacts": [
         "NatriumInternalCalculations"
-      ]
-    },
-    "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts\\utils\\ReentrancyGuard.sol": {
-      "lastModificationDate": 1731654356945,
-      "contentHash": "190613e556d509d9e9a0ea43dc5d891d",
-      "sourceName": "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
-      "solcConfig": {
-        "version": "0.8.26",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "storageLayout"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "ReentrancyGuard"
       ]
     },
     "D:\\blockchain file\\Natrium-Marketplace\\Natrium-Nft-Marketplace\\node_modules\\@openzeppelin\\contracts-upgradeable\\utils\\ReentrancyGuardUpgradeable.sol": {

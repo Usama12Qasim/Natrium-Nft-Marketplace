@@ -5,6 +5,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
 import "./Natrium.sol";
 import "./TicktingContract.sol";
+import "./EventDeployer.sol";
 
 contract NatirumMarketplace is
     NatriumInternalCalculations,
@@ -29,11 +30,11 @@ contract NatirumMarketplace is
     }
 
     mapping(address => mapping(uint256 => NftDetails)) nftInfo;
-    mapping(address => mapping(uint256 =>OfferDetails)) offererInfo;
+    mapping(address => mapping(uint256 => OfferDetails)) offererInfo;
     mapping(address => uint256) public trackOfferPrice;
-    NftDetails[] listedNfts;
 
     uint8 private serviceFees;
+    address private factoryAddress;
 
     event ListNFT(
         address seller,
@@ -82,22 +83,26 @@ contract NatirumMarketplace is
         address _hostContract
     ) external nonReentrant {
         EventTicket hostContract = EventTicket(_hostContract);
+        EventDeployer factory = EventDeployer(factoryAddress);
         NftDetails storage info = nftInfo[msg.sender][_tokenId];
 
-        require(!info.isListed, "Already Listed");
+        require(
+            factory.approvedContracts(_hostContract),
+            "Collection isn't created in Event deployer factory"
+        );
 
         require(
             hostContract.ownerOf(_tokenId) == msg.sender,
             "You are not the owner of this Nft"
         );
 
+        require(!info.isListed, "Already Listed");
+
         info.hostContract = _hostContract;
         info.seller = msg.sender;
         info.nftPrice = _price;
         info.tokenID = _tokenId;
         info.isListed = true;
-
-        listedNfts.push(info);
 
         hostContract.safeTransferFrom(msg.sender, address(this), _tokenId);
 
@@ -164,7 +169,7 @@ contract NatirumMarketplace is
             _seller
         );
 
-        emit buyNFT(msg.sender, _tokenId, msg.value, block.timestamp);
+        emit buyNFT(msg.sender, _tokenId, NftPrice, block.timestamp);
 
         delete nftInfo[_seller][_tokenId];
     }
@@ -193,24 +198,9 @@ contract NatirumMarketplace is
 
         info.offererAddress.push(msg.sender);
         info.offererPrice.push(_offerPrice);
-        
 
-        emit makeOffer(msg.sender, msg.value);
+        emit makeOffer(msg.sender, _offerPrice);
     }
-
-    function getOfferDetails(address _seller, uint256 _tokenId) 
-    external 
-    view 
-    returns (address[] memory, uint256[] memory) 
-{
-    NftDetails memory details = nftInfo[_seller][_tokenId];
-    return (details.offererAddress, details.offererPrice);
-}
-
-function getBalance() public view returns(uint256 ContractBalance)
-{
-    return address(this).balance;
-}
 
     function acceptOffers(
         uint256 _tokenId,
@@ -266,29 +256,30 @@ function getBalance() public view returns(uint256 ContractBalance)
         delete offererInfo[_buyer][_tokenId];
     }
 
-    function withDraw(uint256 _tokenId) external nonReentrant
-    {
+    function withDraw(uint256 _tokenId) external nonReentrant {
         OfferDetails memory details = offererInfo[msg.sender][_tokenId];
 
-        require(details.buyer == msg.sender, "Only buyer withdraw his own amount");
+        require(
+            details.buyer == msg.sender,
+            "Only buyer withdraw his own amount"
+        );
         require(trackOfferPrice[msg.sender] > 0, "Already With-Draw Amount");
-        
 
         uint256 offerPrice = trackOfferPrice[msg.sender];
         trackOfferPrice[msg.sender] = 0;
 
         payable(msg.sender).transfer(offerPrice);
 
-        emit withdraw(
-            msg.sender, 
-            offerPrice, 
-            block.timestamp
-        );
+        emit withdraw(msg.sender, offerPrice, block.timestamp);
     }
 
-    function setServiceFees(uint8 _serviceFees) external onlyOwner {
+    function setServiceFeesAndFactoryContract(
+        uint8 _serviceFees,
+        address _factoryAddress
+    ) external onlyOwner {
         require(_serviceFees > 0, "Service Fees must be greater than zero");
-
+        require(_factoryAddress != address(0), "Invalid Factory Address");
+        factoryAddress = _factoryAddress;
         serviceFees = _serviceFees;
 
         emit servicePercentage(msg.sender, _serviceFees);
@@ -308,11 +299,37 @@ function getBalance() public view returns(uint256 ContractBalance)
         hostContract.safeTransferFrom(address(this), _buyerAddress, _tokenId);
     }
 
-    function getNftDetails() public view returns (NftDetails[] memory) {
-        return listedNfts;
+    function getNftDetails(
+        address _seller,
+        uint256 _tokenId
+    )
+        external
+        view
+        returns (
+            address Seller,
+            uint256 TokenId,
+            address[] memory OffererAddress,
+            uint256[] memory OffererAmount,
+            address hostContract,
+            uint256 NftPrice,
+            bool Listed
+        )
+    {
+        NftDetails memory details = nftInfo[_seller][_tokenId];
+        return (
+            details.seller,
+            details.tokenID,
+            details.offererAddress,
+            details.offererPrice,
+            details.hostContract,
+            details.nftPrice,
+            details.isListed
+        );
     }
 
-    function getOfferDetails(uint256 _tokenId) public view returns (OfferDetails memory) {
+    function getOfferDetails(
+        uint256 _tokenId
+    ) public view returns (OfferDetails memory) {
         return offererInfo[msg.sender][_tokenId];
     }
 
