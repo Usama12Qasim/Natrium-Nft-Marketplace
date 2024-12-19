@@ -195,96 +195,6 @@ describe("Natrium Marketpalce", function () {
             console.log("Confirm Approve Collection Address of minter2", approveContract2);
         });
     });
-    describe("Mint Nft Ticekt", function () {
-        it("should Mint Nft", async () => {
-            let Name = "Nick Jonas";
-            let Symbol = "MCT";
-            let Event = "Music Concert";
-            let EventStartDate;
-            let EventEndDate;
-            let TicketBuyStart;
-            let TicketEndStart;
-
-            let getBlockNumber = await ethers.provider.getBlockNumber();
-            getBlock = await ethers.provider.getBlock(getBlockNumber);
-            EventStartDate = getBlock.timestamp;
-            EventEndDate = EventStartDate + (2 * 86400);
-
-            TicketBuyStart = EventStartDate;
-            TicketEndStart = EventEndDate - 86400;
-
-            let tickets = [
-                {
-                    ticketType: "VIP",
-                    quantity: 100,
-                    price: ethers.parseUnits("50", 6) // Example: 50 USDT per VIP ticket
-                },
-                {
-                    ticketType: "General Admission",
-                    quantity: 200,
-                    price: ethers.parseUnits("20", 6) // Example: 20 USDT per General Admission ticket
-                }
-            ];
-            let TokenAddress = addr1.address;
-
-            await deployedNatriumFactoryContract.connect(minter1).deployNewCollection(
-                Name,
-                Symbol,
-                Event,
-                EventStartDate,
-                EventEndDate,
-                TicketBuyStart,
-                TicketEndStart,
-                tickets,
-                TokenAddress,
-                walletAddress
-            );
-
-            let Tickets = [
-                {
-                    ticketType: "VVIP",
-                    quantity: 50,
-                    price: ethers.parseUnits("50", 6) // Example: 50 USDT per VIP ticket
-                },
-                {
-                    ticketType: "Regular customer",
-                    quantity: 100,
-                    price: ethers.parseUnits("20", 6) // Example: 20 USDT per General Admission ticket
-                }
-            ];
-
-            await deployedNatriumFactoryContract.connect(minter2).deployNewCollection(
-                "Name",
-                "Symbol",
-                "Event",
-                EventStartDate,
-                EventEndDate,
-                TicketBuyStart,
-                TicketEndStart,
-                Tickets,
-                TokenAddress,
-                walletAddress
-            );
-
-            let newCollectionAddress1 = await deployedNatriumFactoryContract.contractAddresses(0);
-            let newCollectionAddress2 = await deployedNatriumFactoryContract.contractAddresses(1);
-            console.log("New Collection Address of minter 1", newCollectionAddress1);
-            console.log("New Collection Address of minter 2", newCollectionAddress2);
-
-            await deployedNatriumFactoryContract.connect(owner).approveContract(newCollectionAddress1);
-            await deployedNatriumFactoryContract.connect(owner).approveContract(newCollectionAddress2);
-
-            let approveContract1 = await deployedNatriumFactoryContract.approvedContracts(newCollectionAddress1);
-            let approveContract2 = await deployedNatriumFactoryContract.approvedContracts(newCollectionAddress2);
-
-            console.log("Confirm Approve Collection Address of minter1", approveContract1);
-            console.log("Confirm Approve Collection Address of minter2", approveContract2);
-
-            await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, tokenURI);
-            await deployedNatriumTicketingContract.connect(minter2).mintTicket(1, tokenURI);
-        })
-    });
-
     describe("List Nft", function() {
         it("should list nft by minter", async() => {
             let Name = "Nick Jonas";
@@ -572,7 +482,6 @@ describe("Natrium Marketpalce", function () {
             await deployedNatriumMarketPlaceContract.connect(buyer1).buyNft(
                 0,
                 minter1.address,
-                deployedNatriumTicketingContract.target,
                 {value: ethers.parseUnits("0.3")}
             );
 
@@ -614,7 +523,6 @@ describe("Natrium Marketpalce", function () {
             await deployedNatriumMarketPlaceContract.connect(buyer2).buyNft(
                 1,
                 minter2.address,
-                deployedNatriumTicketingContract.target,
                 {value: ethers.parseUnits("0.5")}
             );
 
@@ -1048,5 +956,5 @@ describe("Natrium Marketpalce", function () {
             console.log("Nft  details", NftDetails1);
 
         })
-    })
+    });
 })

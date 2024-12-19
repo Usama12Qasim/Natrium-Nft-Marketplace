@@ -67,7 +67,7 @@ contract NatirumMarketplace is
 
     event RejectOffer(address buyer, uint256 offerPrice, bool isRejected);
 
-    event servicePercentage(address admin, uint8 serviceFee);
+    event serviceFeesAndFactoryContract(address admin, uint8 serviceFee, address FactoryAddress);
 
     event withdraw(address buyer, uint256 amount, uint256 timeStamp);
 
@@ -80,6 +80,7 @@ contract NatirumMarketplace is
     function listNft(
         uint256 _tokenId,
         uint256 _price,
+        address collection,
         address _hostContract
     ) external nonReentrant {
         EventTicket hostContract = EventTicket(_hostContract);
@@ -87,7 +88,7 @@ contract NatirumMarketplace is
         NftDetails storage info = nftInfo[msg.sender][_tokenId];
 
         require(
-            factory.approvedContracts(_hostContract),
+            factory.approvedContracts(collection),
             "Collection isn't created in Event deployer factory"
         );
 
@@ -149,10 +150,10 @@ contract NatirumMarketplace is
 
     function buyNft(
         uint256 _tokenId,
-        address _seller,
-        address _hostContract
+        address _seller
     ) external payable nonReentrant {
         uint256 NftPrice = nftInfo[_seller][_tokenId].nftPrice;
+        address _hostContract = nftInfo[_seller][_tokenId].hostContract;
 
         require(nftInfo[_seller][_tokenId].seller == _seller, "Invalid Seller");
         require(msg.value == NftPrice && NftPrice != 0, "InSufficient Amount");
@@ -282,7 +283,7 @@ contract NatirumMarketplace is
         factoryAddress = _factoryAddress;
         serviceFees = _serviceFees;
 
-        emit servicePercentage(msg.sender, _serviceFees);
+        emit serviceFeesAndFactoryContract(msg.sender, _serviceFees, _factoryAddress);
     }
 
     function _transferNftAndFee(

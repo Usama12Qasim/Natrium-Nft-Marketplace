@@ -5,24 +5,20 @@ async function main() {
   // // Replace with actual token and funds wallet addresses
    let [owner, admin, addr1, addr2, addr3, addr4, addr5, walletAddress] = await ethers.getSigners();
 
-  // //Natrium Nft Contract
-  // const NatriumNftContrac = await ethers.getContractFactory("MyToken");
+   const NatriumFactoryContract = await ethers.getContractFactory("EventDeployer");
+   let deployedNatriumFactoryContract = await NatriumFactoryContract.deploy();
+   await deployedNatriumFactoryContract.connect(owner).waitForDeployment();
 
-  // deployedNatriumTicketingContract = await upgrades.deployProxy(NatriumNftContrac, [owner.address], { initializer: 'initialize' });
+   console.log("Natrium Factory Contract deployed to:", deployedNatriumFactoryContract.target);
 
-  // // Wait for the contract to be deployed
-  // await deployedNatriumTicketingContract.waitForDeployment();
-  // console.log("NatirumToken deployed to:", deployedNatriumTicketingContract.target);
+   //Natrium Ticketing Nft Contract
+   const NatriumNftContract = await ethers.getContractFactory("EventTicket");
 
-  //Natrium Nft Marketplace
-  const NatirumMarketplace = await ethers.getContractFactory("NatirumMarketplace");
+   let deployedNatriumTicketingContract = await NatriumNftContract.deploy();
 
-  deployedNatriumMarketPlaceContract = await upgrades.deployProxy(NatirumMarketplace, [], { initializer: 'initialize' });
-
-  // Wait for the contract to be deployed
-  await deployedNatriumMarketPlaceContract.connect(owner).waitForDeployment();
-
-  console.log("NatirumMarketplace deployed to:", deployedNatriumMarketPlaceContract.target);
+   // Wait for the contract to be deployed
+   await deployedNatriumTicketingContract.connect(owner).waitForDeployment();
+   console.log("NatirumToken deployed to:", deployedNatriumTicketingContract.target);
 
 }
 
