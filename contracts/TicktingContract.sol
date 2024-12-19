@@ -15,6 +15,13 @@ import {EventDeployer} from "./EventDeployer.sol";
 contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
     using SafeERC20 for IERC20;
 
+    event CollectionMinted(
+        string CollectionName,
+        uint256 indexed collectionId,
+        uint256 timeStamp,
+        uint256[] tokenIds,
+        string[] tokenURIs
+    );
     /// @notice A struct representing a ticket type for the event.
     /// @param ticketType The type/category of the ticket (e.g., VIP, General Admission).
     /// @param quantity The number of tickets available for this type.
@@ -59,6 +66,8 @@ contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
 
     /// @notice A mapping from tokenId to the metadata URI for each token.
     mapping(uint256 => string) private _tokenURIs;
+    mapping(uint256 => uint256[]) private collectionToTokenIds;
+    mapping(uint256 => string[]) private collectionToTokenURIs;
 
     /// @notice The next tokenId to be minted.
     uint256 private nextTokenId;
@@ -95,7 +104,7 @@ contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
 
         usdtToken = IERC20(_usdtTokenAddress);
         eventDeployer = _eventDeployer;
-        fundsWallet=_fundsWallet;
+        fundsWallet = _fundsWallet;
 
         eventDetail.eventName = _eventName;
         eventDetail.startDate = _startDate;
@@ -145,6 +154,17 @@ contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
         _safeMint(msg.sender, tokenId); // Mint the NFT with the new tokenId
         _setTokenURI(tokenId, _tokenURI); // Set the specific URI for this tokenId
         ticketInfo[tokenId] = selectedTicket;
+
+        collectionToTokenIds[ticketIndex].push(tokenId);
+        collectionToTokenURIs[ticketIndex].push(_tokenURI);
+
+        emit CollectionMinted(
+            eventDetail.eventName,
+            ticketIndex,
+            block.timestamp,
+            collectionToTokenIds[ticketIndex],
+            collectionToTokenURIs[ticketIndex]
+        );
     }
 
     /// @notice Sets the metadata URI for a given token ID.
@@ -162,12 +182,9 @@ contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
     /// @dev Reverts if the token does not exist.
     /// @param tokenId The ID of the token.
     /// @return The metadata URI associated with the token.
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override
-        returns (string memory)
-    {
+    function tokenURI(
+        uint256 tokenId
+    ) public view override returns (string memory) {
         if (_ownerOf(tokenId) == address(0)) {
             revert TokenDoesNotExist();
         }

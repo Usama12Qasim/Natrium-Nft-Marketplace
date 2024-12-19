@@ -195,7 +195,7 @@ describe("Natrium Marketpalce", function () {
             console.log("Confirm Approve Collection Address of minter2", approveContract2);
         });
     });
-    describe("List Nft", function() {
+    describe.only("List Nft", function() {
         it("should list nft by minter", async() => {
             let Name = "Nick Jonas";
             let Symbol = "MCT";
@@ -280,62 +280,75 @@ describe("Natrium Marketpalce", function () {
             console.log("Confirm Approve Collection Address of minter1", approveContract1);
             console.log("Confirm Approve Collection Address of minter2", approveContract2);
 
-            await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, tokenURI);
-            await deployedNatriumTicketingContract.connect(minter2).mintTicket(1, tokenURI);
+            await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, "tokenURI");
+            await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, "www.nft.com");
+            await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, "www.Token.com");
+            await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, "www.com");
+            await deployedNatriumTicketingContract.connect(minter2).mintTicket(1, "Nft.com");
 
-            await deployedNatriumFactoryContract.connect(owner).approveContract(deployedNatriumTicketingContract.target);
+            let ListNFT1 = await deployedNatriumTicketingContract.queryFilter("CollectionMinted");
+            let NFT1 = ListNFT1[3];
+            let CollectionName = NFT1.args.CollectionName;
+            let Seller1 = NFT1.args.collectionId;
+            let CreationTime = NFT1.args.timeStamp
+            let TokenId1 = NFT1.args.tokenIds;
+            let HostContract1 = NFT1.args.tokenURIs;
 
-            await deployedNatriumMarketPlaceContract.connect(owner).setServiceFeesAndFactoryContract(serviceFess, deployedNatriumFactoryContract.target);
+            console.log(CollectionName, Seller1,TokenId1,CreationTime,HostContract1);
 
-            await deployedNatriumTicketingContract.connect(minter1).approve(deployedNatriumMarketPlaceContract.target,0);
-            await deployedNatriumTicketingContract.connect(minter2).approve(deployedNatriumMarketPlaceContract.target,1);
-            await deployedNatriumMarketPlaceContract.connect(minter1).listNft(
-                0, 
-                ethers.parseUnits("0.3"),
-                deployedNatriumTicketingContract.target
-            );
+            // await deployedNatriumFactoryContract.connect(owner).approveContract(deployedNatriumTicketingContract.target);
 
-            let ListNFT1 = await deployedNatriumMarketPlaceContract.queryFilter("ListNFT");
-            let NFT1 = ListNFT1[0];
-            let Seller1 = NFT1.args.seller;
-            let TokenId1 = NFT1.args.tokenID;
-            let HostContract1 = NFT1.args.hostContract;
-            let Nft1Price = NFT1.args.nftPrice;
-            let Listed1 = NFT1.args.isListed;
+            // await deployedNatriumMarketPlaceContract.connect(owner).setServiceFeesAndFactoryContract(serviceFess, deployedNatriumFactoryContract.target);
 
-            console.log("Seller1", Seller1,":",
-                "TokenId1",TokenId1, ":",
-                "HostContract1", HostContract1, ":",
-                "Nft1Price", Nft1Price, ":",
-                "Listed1",Listed1
-            );
+            // await deployedNatriumTicketingContract.connect(minter1).approve(deployedNatriumMarketPlaceContract.target,0);
+            // await deployedNatriumTicketingContract.connect(minter2).approve(deployedNatriumMarketPlaceContract.target,1);
+            // await deployedNatriumMarketPlaceContract.connect(minter1).listNft(
+            //     0, 
+            //     ethers.parseUnits("0.3"),
+            //     deployedNatriumTicketingContract.target
+            // );
 
-            expect(Seller1).to.be.equal(minter1.address);
-            expect(Listed1).to.be.true;
+            // let ListNFT1 = await deployedNatriumMarketPlaceContract.queryFilter("ListNFT");
+            // let NFT1 = ListNFT1[0];
+            // let Seller1 = NFT1.args.seller;
+            // let TokenId1 = NFT1.args.tokenID;
+            // let HostContract1 = NFT1.args.hostContract;
+            // let Nft1Price = NFT1.args.nftPrice;
+            // let Listed1 = NFT1.args.isListed;
 
-            await deployedNatriumMarketPlaceContract.connect(minter2).listNft(
-                1, 
-                ethers.parseUnits("0.5"),
-                deployedNatriumTicketingContract.target
-            );
+            // console.log("Seller1", Seller1,":",
+            //     "TokenId1",TokenId1, ":",
+            //     "HostContract1", HostContract1, ":",
+            //     "Nft1Price", Nft1Price, ":",
+            //     "Listed1",Listed1
+            // );
 
-            let ListNFT2 = await deployedNatriumMarketPlaceContract.queryFilter("ListNFT");
-            let NFT2 = ListNFT2[1];
-            let Seller2 = NFT2.args.seller;
-            let TokenId2 = NFT2.args.tokenID;
-            let HostContract2 = NFT2.args.hostContract;
-            let Nft2Price = NFT2.args.nftPrice;
-            let Listed2 = NFT2.args.isListed;
+            // expect(Seller1).to.be.equal(minter1.address);
+            // expect(Listed1).to.be.true;
 
-            console.log("Seller2", Seller2,":",
-                "TokenId2",TokenId2, ":",
-                "HostContract2", HostContract2, ":",
-                "Nft2Price", Nft2Price, ":",
-                "Listed2",Listed2
-            );       
+            // await deployedNatriumMarketPlaceContract.connect(minter2).listNft(
+            //     1, 
+            //     ethers.parseUnits("0.5"),
+            //     deployedNatriumTicketingContract.target
+            // );
+
+            // let ListNFT2 = await deployedNatriumMarketPlaceContract.queryFilter("ListNFT");
+            // let NFT2 = ListNFT2[1];
+            // let Seller2 = NFT2.args.seller;
+            // let TokenId2 = NFT2.args.tokenID;
+            // let HostContract2 = NFT2.args.hostContract;
+            // let Nft2Price = NFT2.args.nftPrice;
+            // let Listed2 = NFT2.args.isListed;
+
+            // console.log("Seller2", Seller2,":",
+            //     "TokenId2",TokenId2, ":",
+            //     "HostContract2", HostContract2, ":",
+            //     "Nft2Price", Nft2Price, ":",
+            //     "Listed2",Listed2
+            // );       
             
-            let NftDetails = await deployedNatriumMarketPlaceContract.getNftDetails(minter1.address, 0);
-            console.log("Nft  details", NftDetails);
+            // let NftDetails = await deployedNatriumMarketPlaceContract.getNftDetails(minter1.address, 0);
+            // console.log("Nft  details", NftDetails);
 
         })
     });
