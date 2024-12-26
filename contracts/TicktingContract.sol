@@ -15,13 +15,6 @@ import {EventDeployer} from "./EventDeployer.sol";
 contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
     using SafeERC20 for IERC20;
 
-    event CollectionMinted(
-        string CollectionName,
-        uint256 indexed collectionId,
-        uint256 timeStamp,
-        uint256[] tokenIds,
-        string[] tokenURIs
-    );
     /// @notice A struct representing a ticket type for the event.
     /// @param ticketType The type/category of the ticket (e.g., VIP, General Admission).
     /// @param quantity The number of tickets available for this type.
@@ -30,6 +23,11 @@ contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
         string ticketType;
         uint256 quantity;
         uint256 price;
+    }
+
+    struct MintedTokenData {
+        uint256[] tokenIds;
+        string[] tokenURIs;
     }
     /// @notice Public address of the event deployer
 
@@ -44,6 +42,7 @@ contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
     /// @param tickets An array of Ticket structs representing the different ticket types.
     struct EventDetail {
         string eventName;
+        string collectionUri;
         uint256 startDate;
         uint256 endDate;
         uint256 ticketStartBuyDate;
@@ -66,8 +65,7 @@ contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
 
     /// @notice A mapping from tokenId to the metadata URI for each token.
     mapping(uint256 => string) private _tokenURIs;
-    mapping(uint256 => uint256[]) private collectionToTokenIds;
-    mapping(uint256 => string[]) private collectionToTokenURIs;
+    mapping(uint256 => MintedTokenData) collectionToMintedData;
 
     /// @notice The next tokenId to be minted.
     uint256 private nextTokenId;
@@ -90,6 +88,7 @@ contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
         string memory symbol,
         address _usdtTokenAddress,
         string memory _eventName,
+        string memory _collectionURI,
         uint256 _startDate,
         uint256 _endDate,
         uint256 _ticketStartBuyDate,
@@ -107,6 +106,7 @@ contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
         fundsWallet = _fundsWallet;
 
         eventDetail.eventName = _eventName;
+        eventDetail.collectionUri = _collectionURI;
         eventDetail.startDate = _startDate;
         eventDetail.endDate = _endDate;
         eventDetail.ticketStartBuyDate = _ticketStartBuyDate;
@@ -155,15 +155,16 @@ contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
         _setTokenURI(tokenId, _tokenURI); // Set the specific URI for this tokenId
         ticketInfo[tokenId] = selectedTicket;
 
-        collectionToTokenIds[ticketIndex].push(tokenId);
-        collectionToTokenURIs[ticketIndex].push(_tokenURI);
+        collectionToMintedData[ticketIndex].tokenIds.push(tokenId); // Store minted token IDs
+        collectionToMintedData[ticketIndex].tokenURIs.push(_tokenURI); // Store minted token URIs
 
-        emit CollectionMinted(
-            eventDetail.eventName,
+        EventDeployer(eventDeployer).notifyMint(
+            eventDetail.collectionUri,
+            address(this),
             ticketIndex,
-            block.timestamp,
-            collectionToTokenIds[ticketIndex],
-            collectionToTokenURIs[ticketIndex]
+            collectionToMintedData[ticketIndex].tokenIds,
+            collectionToMintedData[ticketIndex].tokenURIs,
+            block.timestamp
         );
     }
 

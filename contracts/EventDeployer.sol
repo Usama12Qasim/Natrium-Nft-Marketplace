@@ -11,6 +11,16 @@ contract EventDeployer is OwnableUpgradeable {
     using SafeERC20 for IERC20;
     using Address for address payable;
 
+    event CollectionDetails(string CollectionUri, uint256 createdAt);
+    event CollectionMinted(
+        string CollectionUri,
+        address indexed ticketAddress,
+        uint256 indexed ticketIndex,
+        uint256 timeStamp,
+        uint256[] tokenIds,
+        string[] tokenURIs
+    );
+
     IERC20 public tokenAddress;
     address public fundsWallet;
     uint256 public deploymentFee;
@@ -18,10 +28,10 @@ contract EventDeployer is OwnableUpgradeable {
     mapping(address => bool) public approvedContracts;
     uint256 public contractCount; // Track the number of deployed contracts
 
-    function initialize(address _tokenAddress, address _fundsWallet)
-        public
-        initializer
-    {
+    function initialize(
+        address _tokenAddress,
+        address _fundsWallet
+    ) public initializer {
         __Ownable_init(msg.sender);
         tokenAddress = IERC20(_tokenAddress);
         fundsWallet = _fundsWallet;
@@ -42,6 +52,7 @@ contract EventDeployer is OwnableUpgradeable {
     function deployNewCollection(
         string memory name,
         string memory symbol,
+        string memory _collectionURI,
         string memory eventName,
         uint256 startTime,
         uint256 endTime,
@@ -58,6 +69,7 @@ contract EventDeployer is OwnableUpgradeable {
             symbol,
             address(_Token),
             eventName,
+            _collectionURI,
             startTime,
             endTime,
             ticketStartBuyDate,
@@ -71,6 +83,9 @@ contract EventDeployer is OwnableUpgradeable {
         // Store the address of the deployed contract
         contractAddresses[contractCount] = address(newCollection);
         contractCount++;
+
+        emit CollectionDetails(_collectionURI, block.timestamp);
+
         return address(newCollection);
     }
 
@@ -82,5 +97,26 @@ contract EventDeployer is OwnableUpgradeable {
         approvedContracts[contractAddress] = false;
     }
 
-    
+    function notifyMint(
+        string memory _collectionUri,
+        address eventTicketContract,
+        uint256 ticketIndex,
+        uint256[] memory tokenIds,
+        string[] memory tokenURIs,
+        uint256 timeStamp
+    ) external {
+        // require(
+        //     approvedContracts[eventTicketContract],
+        //     "Unauthorized contract"
+        // );
+
+        emit CollectionMinted(
+            _collectionUri,
+            eventTicketContract,
+            ticketIndex,
+            timeStamp,
+            tokenIds,
+            tokenURIs
+        );
+    }
 }

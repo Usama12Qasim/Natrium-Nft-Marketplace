@@ -55,6 +55,11 @@
       "address": "0x67AEe48489DC243518fFddF5ba92F31813251424",
       "txHash": "0x019d952a7ebe4034bd8c4c52901fc1da494bfecc6e926493e70ca737d2b10a1f",
       "kind": "transparent"
+    },
+    {
+      "address": "0x219e4812f9341f44E033359D819834144Ee142C2",
+      "txHash": "0x6c0470a039313700604fa47b79a9d031cb491d1c48c4e92bcceb81d3dcfbcb69",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -484,6 +489,285 @@
               {
                 "label": "currentOffer",
                 "type": "t_enum(Offer)6235",
+                "offset": 0,
+                "slot": "4"
+              }
+            ],
+            "numberOfBytes": "160"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.ReentrancyGuard": [
+            {
+              "contract": "ReentrancyGuardUpgradeable",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\ReentrancyGuardUpgradeable.sol:43",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "d89b60053768315a7b84ad233665847360adceee78c17310217f06ab4855ab66": {
+      "address": "0xae1E34862c3a85e868A4873a5f58D506152A2976",
+      "txHash": "0x70235428a8a642be265dc024bdaffbc7367f907e9f644a46f6a9436d377b3d83",
+      "layout": {
+        "solcVersion": "0.8.26",
+        "storage": [
+          {
+            "label": "contractOwner",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "NatriumInternalCalculations",
+            "src": "contracts\\Natrium.sol:12"
+          },
+          {
+            "label": "nftInfo",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_struct(NftDetails)7816_storage))",
+            "contract": "NatirumMarketplace",
+            "src": "contracts\\Natrium-Nft-Marketplace.sol:33"
+          },
+          {
+            "label": "offererInfo",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_struct(OfferDetails)7827_storage))",
+            "contract": "NatirumMarketplace",
+            "src": "contracts\\Natrium-Nft-Marketplace.sol:34"
+          },
+          {
+            "label": "trackOfferPrice",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "NatirumMarketplace",
+            "src": "contracts\\Natrium-Nft-Marketplace.sol:35"
+          },
+          {
+            "label": "serviceFees",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint8",
+            "contract": "NatirumMarketplace",
+            "src": "contracts\\Natrium-Nft-Marketplace.sol:37"
+          },
+          {
+            "label": "factoryAddress",
+            "offset": 1,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "NatirumMarketplace",
+            "src": "contracts\\Natrium-Nft-Marketplace.sol:38"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)73_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)13_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ReentrancyGuardStorage)556_storage": {
+            "label": "struct ReentrancyGuardUpgradeable.ReentrancyGuardStorage",
+            "members": [
+              {
+                "label": "_status",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_struct(NftDetails)7816_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct NatirumMarketplace.NftDetails))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_struct(OfferDetails)7827_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct NatirumMarketplace.OfferDetails))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(NftDetails)7816_storage)": {
+            "label": "mapping(uint256 => struct NatirumMarketplace.NftDetails)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(OfferDetails)7827_storage)": {
+            "label": "mapping(uint256 => struct NatirumMarketplace.OfferDetails)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(NftDetails)7816_storage": {
+            "label": "struct NatirumMarketplace.NftDetails",
+            "members": [
+              {
+                "label": "seller",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "tokenID",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "offererAddress",
+                "type": "t_array(t_address)dyn_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "offererPrice",
+                "type": "t_array(t_uint256)dyn_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "hostContract",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "nftPrice",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "Expiration",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isListed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(OfferDetails)7827_storage": {
+            "label": "struct NatirumMarketplace.OfferDetails",
+            "members": [
+              {
+                "label": "buyer",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "tokenID",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "offerPrice",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "offerExpire",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "offerPlaced",
+                "type": "t_bool",
                 "offset": 0,
                 "slot": "4"
               }
