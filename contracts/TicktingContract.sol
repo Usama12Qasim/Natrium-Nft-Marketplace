@@ -24,11 +24,6 @@ contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
         uint256 quantity;
         uint256 price;
     }
-
-    struct MintedTokenData {
-        uint256[] tokenIds;
-        string[] tokenURIs;
-    }
     /// @notice Public address of the event deployer
 
     address public eventDeployer;
@@ -65,8 +60,7 @@ contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
 
     /// @notice A mapping from tokenId to the metadata URI for each token.
     mapping(uint256 => string) private _tokenURIs;
-    mapping(uint256 => MintedTokenData) collectionToMintedData;
-
+    
     /// @notice The next tokenId to be minted.
     uint256 private nextTokenId;
 
@@ -155,17 +149,6 @@ contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
         _setTokenURI(tokenId, _tokenURI); // Set the specific URI for this tokenId
         ticketInfo[tokenId] = selectedTicket;
 
-        collectionToMintedData[ticketIndex].tokenIds.push(tokenId); // Store minted token IDs
-        collectionToMintedData[ticketIndex].tokenURIs.push(_tokenURI); // Store minted token URIs
-
-        EventDeployer(eventDeployer).notifyMint(
-            eventDetail.collectionUri,
-            address(this),
-            ticketIndex,
-            collectionToMintedData[ticketIndex].tokenIds,
-            collectionToMintedData[ticketIndex].tokenURIs,
-            block.timestamp
-        );
     }
 
     /// @notice Sets the metadata URI for a given token ID.

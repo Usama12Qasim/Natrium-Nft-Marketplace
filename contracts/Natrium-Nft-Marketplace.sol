@@ -14,6 +14,8 @@ contract NatirumMarketplace is
     struct NftDetails {
         address seller;
         uint256 tokenID;
+        string TicketType;
+        string TokenUri;
         address hostContract;
         uint256 nftPrice;
         uint256 Expiration;
@@ -28,22 +30,53 @@ contract NatirumMarketplace is
         bool offerPlaced;
     }
 
+    struct Nfts {
+        address Seller;
+        uint256[] tokenID;
+        string[] TicketType;
+        string[] TokenUri;
+        uint256[] nftPrice;
+        uint256[] Expiration;
+    }
+
+    struct transferNftsInfo {
+        address[] from;
+        address[] to;
+        uint256[] paidAmount;
+        uint256[] tokenID;
+        uint256[] timeStamp;
+    }
+
     mapping(address => mapping(uint256 => NftDetails)) nftInfo;
     mapping(address => mapping(uint256 => OfferDetails)) offererInfo;
+    mapping(address => mapping(uint256 => transferNftsInfo)) transferNfts;
+    mapping(address => mapping(uint256 => uint256[])) priceHistory;
+    mapping(address => mapping(uint256 => uint256[])) priceTimestamps;
     mapping(address => uint256) public trackOfferPrice;
+    mapping(address => Nfts) nft;
 
     uint8 private serviceFees;
-    address private factoryAddress;
 
     event ListNFT(
         address seller,
-        uint256 tokenID,
-        string TicketType,
-        string tokenUri,
+        uint256[] tokenID,
+        string[] TicketType,
+        string[] tokenUri,
         address hostContract,
-        uint256 nftPrice,
-        uint256 Expiration,
-        bool isListed
+        uint256[] nftPrice,
+        uint256[] Expiration
+    );
+
+    event GetNft(
+        address owner,
+        uint256 tokenID,
+        string tokenUri,
+        string CollectionUri,
+        string TicketType,
+        uint256[] previousPrice,
+        uint256 currentPrice,
+        uint256 NftExpire,
+        uint256[] timestamps
     );
 
     event UnListNFT(
@@ -53,28 +86,25 @@ contract NatirumMarketplace is
         bool isUnlisted
     );
     event TransferNft(
-        address from,
-        address to,
-        uint256 tokenID,
-        uint256 paidPrice,
-        uint256 timeStamp
+        address[] indexed from,
+        address[] indexed to,
+        uint256[] tokenID,
+        uint256[] paidPrice,
+        uint256[] timeStamp
     );
     event makeOffer(address buyer, uint256 offerPrice, uint256 tokenId);
 
     event acceptOffer(
-        address buyer,
-        uint256 acceptedPrice,
-        uint256 tokenId,
-        bool isAccepted
+        address[] indexed from,
+        address[] indexed to,
+        uint256[] acceptedPrice,
+        uint256[] tokenId,
+        uint256[] timeStamps
     );
 
     event RejectOffer(address buyer, uint256 offerPrice, bool isRejected);
 
-    event serviceFeesAndFactoryContract(
-        address admin,
-        uint8 serviceFee,
-        address FactoryAddress
-    );
+    event ServiceFees(address admin, uint8 serviceFee);
 
     event withdraw(address buyer, uint256 amount, uint256 timeStamp);
 
@@ -90,127 +120,127 @@ contract NatirumMarketplace is
         uint256 _NftExpiration,
         address _hostContract
     ) external {
-        EventTicket hostContract = EventTicket(_hostContract);
-        //EventDeployer factory = EventDeployer(_hostContract);
-        NftDetails storage info = nftInfo[msg.sender][_tokenId];
-
-        // require(
-        //     factory.approvedContracts(_hostContract),
-        //     "HostContract isn't created in Event deployer factory"
-        // );
-
-        require(
-            hostContract.ownerOf(_tokenId) == msg.sender,
-            "You are not the owner of this Nft"
-        );
-
-        require(!info.isListed, "Already Listed");
-
         require(_NftExpiration > block.timestamp, "Time Error");
 
-        info.hostContract = _hostContract;
-        info.seller = msg.sender;
-        info.nftPrice = _price;
-        info.tokenID = _tokenId;
-        info.isListed = true;
-        info.Expiration = _NftExpiration;
-
-        string memory TokenUri = hostContract.tokenURI(_tokenId);
-        (string memory Ticketype, , ) = EventTicket(hostContract).ticketInfo(
-            _tokenId
-        );
-
-        hostContract.safeTransferFrom(msg.sender, address(this), _tokenId);
-
-        emit ListNFT(
-            msg.sender,
-            _tokenId,
-            Ticketype,
-            TokenUri,
-            _hostContract,
-            _price,
-            _NftExpiration,
-            info.isListed
-        );
+        _listNft(_tokenId, _price, _NftExpiration, _hostContract);
     }
 
-    function unListNft(uint256 _tokenId) external {
+    function unListNft(uint256 _tokenId, address hostContract) external {
+        NftDetails memory info = nftInfo[hostContract][_tokenId];
+
         require(
-            nftInfo[msg.sender][_tokenId].seller == msg.sender,
+            info.seller == msg.sender,
             "Only Seller can unList his own Nft"
         );
 
-        require(nftInfo[msg.sender][_tokenId].isListed, "Nft is not Listed");
+        _unListNft(_tokenId, hostContract);
 
-        _unListNft(_tokenId);
-
-        delete nftInfo[msg.sender][_tokenId];
+        delete nftInfo[hostContract][_tokenId];
+        Nfts storage NFTS = nft[hostContract];
+        uint256 indexToRemove = _findIndex(_tokenId, NFTS);
+        _removeNftFromStruct(NFTS, indexToRemove);
     }
 
-    function _unListNft(uint256 _tokenId) internal {
-        address _hostContract = nftInfo[msg.sender][_tokenId].hostContract;
+    function _unListNft(uint256 _tokenId, address _hostContract) internal {
+        NftDetails memory info = nftInfo[_hostContract][_tokenId];
 
         EventTicket hostContract = EventTicket(_hostContract);
 
-        hostContract.safeTransferFrom(
-            address(this),
-            nftInfo[msg.sender][_tokenId].seller,
-            _tokenId
-        );
+        hostContract.safeTransferFrom(address(this), info.seller, _tokenId);
 
-        emit UnListNFT(
-            nftInfo[msg.sender][_tokenId].seller,
-            _tokenId,
-            nftInfo[msg.sender][_tokenId].hostContract,
-            true
-        );
+        emit UnListNFT(info.seller, _tokenId, info.hostContract, true);
     }
 
-    function buyNft(uint256 _tokenId, address _seller) external payable {
-        uint256 NftPrice = nftInfo[_seller][_tokenId].nftPrice;
-        address _hostContract = nftInfo[_seller][_tokenId].hostContract;
+    function buyNft(uint256 _tokenId, address hostContract) external payable {
+        NftDetails memory info = nftInfo[hostContract][_tokenId];
+        uint256 NftPrice = info.nftPrice;
+        address _hostContract = info.hostContract;
 
-        require(nftInfo[_seller][_tokenId].seller == _seller, "Invalid Seller");
+        require(info.seller != msg.sender, "Can't Self buy");
         require(msg.value == NftPrice && NftPrice != 0, "InSufficient Amount");
-        require(
-            nftInfo[_seller][_tokenId].seller != msg.sender,
-            "Can't Self buy"
-        );
+        require(block.timestamp < info.Expiration, "Nft Expired");
 
-        require(
-            block.timestamp < nftInfo[_seller][_tokenId].Expiration,
-            "Nft Expired"
-        );
+        (
+            address[] memory seller,
+            address[] memory buyer,
+            uint256[] memory tokenId,
+            uint256[] memory payAmount,
+            uint256[] memory purchaseTime
+        ) = _handleArrayValues(
+                info.seller,
+                msg.sender,
+                _tokenId,
+                NftPrice,
+                block.timestamp,
+                hostContract
+            );
 
         _transferNftAndFee(
             _tokenId,
             msg.sender,
             _hostContract,
             NftPrice,
-            _seller
+            info.seller
         );
 
         emit TransferNft(
-            _seller,
-            msg.sender,
-            _tokenId,
-            NftPrice,
-            block.timestamp
+            seller,
+            buyer,
+            tokenId,
+            payAmount,
+            purchaseTime
         );
 
-        delete nftInfo[_seller][_tokenId];
+        Nfts storage NFTS = nft[_hostContract];
+        uint256 indexToRemove = _findIndex(_tokenId, NFTS);
+        _removeNftFromStruct(NFTS, indexToRemove);
+
+        delete nftInfo[hostContract][_tokenId];
+    }
+
+    function _handleArrayValues(
+        address from,
+        address to,
+        uint256 tokenID,
+        uint256 paidAmount,
+        uint256 timeStamp,
+        address hostContract
+    )
+        internal
+        returns (
+            address[] memory,
+            address[] memory,
+            uint256[] memory,
+            uint256[] memory,
+            uint256[] memory
+        )
+    {
+        transferNftsInfo storage NftsInfo = transferNfts[hostContract][tokenID];
+        NftsInfo.from.push(from);
+        NftsInfo.to.push(to);
+        NftsInfo.tokenID.push(tokenID);
+        NftsInfo.paidAmount.push(paidAmount);
+        NftsInfo.timeStamp.push(timeStamp);
+
+        return (
+            NftsInfo.from,
+            NftsInfo.to,
+            NftsInfo.tokenID,
+            NftsInfo.paidAmount,
+            NftsInfo.timeStamp
+        );
     }
 
     function createOffer(
         uint256 _tokenId,
+        address hostContract,
         uint256 _offerPrice,
-        uint256 _offerExpiry,
-        address _seller
+        uint256 _offerExpiry
     ) external payable {
         OfferDetails storage details = offererInfo[msg.sender][_tokenId];
-        NftDetails storage info = nftInfo[_seller][_tokenId];
+        NftDetails memory info = nftInfo[hostContract][_tokenId];
 
-        require(info.isListed, "This token is not Listed");
+        require(info.seller != msg.sender, "Token Owner Cannot create Offer");
         require(block.timestamp < info.Expiration, "Nft Expired");
         require(_offerExpiry > block.timestamp, "Time Error");
         require(msg.value == _offerPrice, "Invalid amount");
@@ -227,9 +257,14 @@ contract NatirumMarketplace is
         emit makeOffer(msg.sender, _offerPrice, _tokenId);
     }
 
-    function acceptOffers(uint256 _tokenId, address _buyer) external {
-        NftDetails memory info = nftInfo[msg.sender][_tokenId];
+    function acceptOffers(
+        uint256 _tokenId,
+        address _buyer,
+        address hostContract
+    ) external {
+        NftDetails memory info = nftInfo[hostContract][_tokenId];
         OfferDetails memory details = offererInfo[_buyer][_tokenId];
+
 
         require(trackOfferPrice[_buyer] > 0, "Doesn't receive offer");
         require(info.seller == msg.sender, "Only Seller can accept the offer");
@@ -239,6 +274,21 @@ contract NatirumMarketplace is
         uint256 offerPrice = trackOfferPrice[_buyer];
         trackOfferPrice[_buyer] = 0;
 
+        (
+            address[] memory seller,
+            address[] memory buyer,
+            uint256[] memory tokenId,
+            uint256[] memory payAmount,
+            uint256[] memory purchaseTime
+        ) = _handleArrayValues(
+                msg.sender,
+                _buyer,
+                _tokenId,
+                offerPrice,
+                block.timestamp,
+                hostContract
+            );
+
         _transferNftAndFee(
             _tokenId,
             _buyer,
@@ -247,18 +297,28 @@ contract NatirumMarketplace is
             msg.sender
         );
 
-        emit acceptOffer(_buyer, offerPrice, _tokenId, true);
+        emit acceptOffer(
+            seller,
+            buyer,
+            payAmount,
+            tokenId,
+            purchaseTime
+        );
 
-        delete nftInfo[msg.sender][_tokenId];
+        delete nftInfo[hostContract][_tokenId];
         delete offererInfo[_buyer][_tokenId];
+        Nfts storage NFTS = nft[hostContract];
+        uint256 indexToRemove = _findIndex(_tokenId, NFTS);
+        _removeNftFromStruct(NFTS, indexToRemove);
     }
 
     function rejectOffer(
         uint256 _tokenId,
-        address _buyer
+        address _buyer,
+        address hostContract
     ) external nonReentrant {
         OfferDetails memory details = offererInfo[_buyer][_tokenId];
-        NftDetails memory info = nftInfo[msg.sender][_tokenId];
+        NftDetails memory info = nftInfo[hostContract][_tokenId];
 
         require(details.tokenID == _tokenId, "Invalid token Id");
         require(
@@ -295,20 +355,11 @@ contract NatirumMarketplace is
         emit withdraw(msg.sender, offerPrice, block.timestamp);
     }
 
-    function setServiceFeesAndFactoryContract(
-        uint8 _serviceFees,
-        address _factoryAddress
-    ) external onlyOwner {
+    function setServiceFees(uint8 _serviceFees) external onlyOwner {
         require(_serviceFees > 0, "Service Fees must be greater than zero");
-        require(_factoryAddress != address(0), "Invalid Factory Address");
-        factoryAddress = _factoryAddress;
         serviceFees = _serviceFees;
 
-        emit serviceFeesAndFactoryContract(
-            msg.sender,
-            _serviceFees,
-            _factoryAddress
-        );
+        emit ServiceFees(msg.sender, _serviceFees);
     }
 
     function _transferNftAndFee(
@@ -325,27 +376,147 @@ contract NatirumMarketplace is
         hostContract.safeTransferFrom(address(this), _buyerAddress, _tokenId);
     }
 
-    function getNftDetails(
-        address _seller,
-        uint256 _tokenId
+    function _listNft(
+        uint256 _tokenId,
+        uint256 _price,
+        uint256 _NftExpiration,
+        address _hostContract
+    ) internal {
+        EventTicket hostContract = EventTicket(_hostContract);
+        NftDetails storage info = nftInfo[_hostContract][_tokenId];
+        Nfts storage NFTS = nft[_hostContract];
+
+        require(
+            hostContract.ownerOf(_tokenId) == msg.sender,
+            "You are not the owner of this Nft"
+        );
+
+        (string memory TicketType, , ) = EventTicket(hostContract).ticketInfo(
+            _tokenId
+        );
+        string memory TokenUri = hostContract.tokenURI(_tokenId);
+
+        info.hostContract = _hostContract;
+        info.seller = msg.sender;
+        info.nftPrice = _price;
+        info.tokenID = _tokenId;
+        info.isListed = true;
+        info.Expiration = _NftExpiration;
+        info.TokenUri = TokenUri;
+        info.TicketType = TicketType;
+        priceHistory[_hostContract][_tokenId].push(_price);
+        priceTimestamps[_hostContract][_tokenId].push(block.timestamp);
+
+        NFTS.tokenID.push(_tokenId);
+        NFTS.TokenUri.push(TokenUri);
+        NFTS.TicketType.push(TicketType);
+        NFTS.nftPrice.push(_price);
+        NFTS.Expiration.push(_NftExpiration);
+        NFTS.Seller = msg.sender;
+
+        getNft(_tokenId, _hostContract);
+
+        hostContract.safeTransferFrom(msg.sender, address(this), _tokenId);
+        emit ListNFT(
+            NFTS.Seller,
+            NFTS.tokenID,
+            NFTS.TicketType,
+            NFTS.TokenUri,
+            _hostContract,
+            NFTS.nftPrice,
+            NFTS.Expiration
+        );
+    }
+
+    function _findIndex(
+        uint256 tokenID,
+        Nfts storage nftData
+    ) internal view returns (uint256) {
+        for (uint256 i = 0; i < nftData.tokenID.length; i++) {
+            if (nftData.tokenID[i] == tokenID) {
+                return i; // Return the index if found
+            }
+        }
+        revert("Token ID not found in struct");
+    }
+
+    function _removeNftFromStruct(
+        Nfts storage nftData,
+        uint256 indexToRemove
+    ) internal {
+        uint256 lastIndex = nftData.tokenID.length - 1;
+
+        if (indexToRemove != lastIndex) {
+            // Swap the last element with the element to be removed
+            nftData.tokenID[indexToRemove] = nftData.tokenID[lastIndex];
+            nftData.TicketType[indexToRemove] = nftData.TicketType[lastIndex];
+            nftData.TokenUri[indexToRemove] = nftData.TokenUri[lastIndex];
+            nftData.nftPrice[indexToRemove] = nftData.nftPrice[lastIndex];
+            nftData.Expiration[indexToRemove] = nftData.Expiration[lastIndex];
+        }
+
+        // Remove the last element
+        nftData.tokenID.pop();
+        nftData.TicketType.pop();
+        nftData.TokenUri.pop();
+        nftData.nftPrice.pop();
+        nftData.Expiration.pop();
+    }
+
+    function getNft(
+        uint256 tokenId,
+        address hostContract
     )
-        external
-        view
+        internal
         returns (
-            address Seller,
-            uint256 TokenId,
-            address hostContract,
-            uint256 NftPrice,
-            bool Listed
+            address,
+            string memory,
+            string memory,
+            string memory,
+            uint256[] memory previousPrices,
+            uint256,
+            uint256[] memory timestamps
         )
     {
-        NftDetails memory details = nftInfo[_seller][_tokenId];
+        NftDetails memory info = nftInfo[hostContract][tokenId];
+
+        (, string memory CollectionUri, , , , ) = EventTicket(info.hostContract)
+            .eventDetail();
+        //uint256 previousPrice = getPreviousPrice(tokenId);
+        uint256 currentPrice = info.nftPrice;
+        string memory TokenUri = info.TokenUri;
+        string memory TicketType = info.TicketType;
+        uint256 NftExpire = info.Expiration;
+        address Seller = info.seller;
+        previousPrices = priceHistory[hostContract][tokenId];
+        timestamps = priceTimestamps[hostContract][tokenId];
+
+        if (previousPrices.length > 0) {
+            currentPrice = previousPrices[previousPrices.length - 1];
+        } else {
+            currentPrice = 0; // No price history available
+        }
+
+        emit GetNft(
+            Seller,
+            tokenId,
+            TokenUri,
+            CollectionUri,
+            TicketType,
+            previousPrices,
+            currentPrice,
+            NftExpire,
+            timestamps
+        );
+
         return (
-            details.seller,
-            details.tokenID,
-            details.hostContract,
-            details.nftPrice,
-            details.isListed
+            Seller,
+            TokenUri,
+            CollectionUri,
+            TicketType,
+            previousPrices,
+            currentPrice,
+            timestamps
         );
     }
 

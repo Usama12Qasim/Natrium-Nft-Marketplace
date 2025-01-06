@@ -11,7 +11,7 @@ async function main() {
 
   // console.log("Natrium Factory Contract deployed to:", deployedNatriumFactoryContract.target);
 
-  //Natrium Ticketing Nft Contract
+  // //Natrium Ticketing Nft Contract
   // const NatriumNftContract = await ethers.getContractFactory("EventTicket");
 
   // let deployedNatriumTicketingContract = await NatriumNftContract.deploy();

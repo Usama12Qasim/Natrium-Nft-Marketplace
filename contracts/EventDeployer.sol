@@ -12,14 +12,7 @@ contract EventDeployer is OwnableUpgradeable {
     using Address for address payable;
 
     event CollectionDetails(string CollectionUri, uint256 createdAt);
-    event CollectionMinted(
-        string CollectionUri,
-        address indexed ticketAddress,
-        uint256 indexed ticketIndex,
-        uint256 timeStamp,
-        uint256[] tokenIds,
-        string[] tokenURIs
-    );
+    event CollectionApproval(address collectionAddress, bool isApproved);
 
     IERC20 public tokenAddress;
     address public fundsWallet;
@@ -84,6 +77,8 @@ contract EventDeployer is OwnableUpgradeable {
         contractAddresses[contractCount] = address(newCollection);
         contractCount++;
 
+        approvedContracts[address(newCollection)] = false;
+
         emit CollectionDetails(_collectionURI, block.timestamp);
 
         return address(newCollection);
@@ -91,32 +86,16 @@ contract EventDeployer is OwnableUpgradeable {
 
     function approveContract(address contractAddress) public onlyOwner {
         approvedContracts[contractAddress] = true;
+
+        emit CollectionApproval(contractAddress, approvedContracts[contractAddress]);
+    }
+
+    function viewApprovedContracts(address contractAddress) public view returns(bool)
+    {
+        return approvedContracts[contractAddress];
     }
 
     function revokeContract(address contractAddress) public onlyOwner {
         approvedContracts[contractAddress] = false;
-    }
-
-    function notifyMint(
-        string memory _collectionUri,
-        address eventTicketContract,
-        uint256 ticketIndex,
-        uint256[] memory tokenIds,
-        string[] memory tokenURIs,
-        uint256 timeStamp
-    ) external {
-        // require(
-        //     approvedContracts[eventTicketContract],
-        //     "Unauthorized contract"
-        // );
-
-        emit CollectionMinted(
-            _collectionUri,
-            eventTicketContract,
-            ticketIndex,
-            timeStamp,
-            tokenIds,
-            tokenURIs
-        );
     }
 }
