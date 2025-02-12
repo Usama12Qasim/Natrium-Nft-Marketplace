@@ -11,7 +11,11 @@ contract EventDeployer is OwnableUpgradeable {
     using SafeERC20 for IERC20;
     using Address for address payable;
 
-    event CollectionDetails(string CollectionUri, uint256 createdAt);
+    event CollectionDetails(
+        address collectionAddress,
+        string CollectionUri,
+        uint256 createdAt
+    );
     event CollectionApproval(address collectionAddress, bool isApproved);
 
     IERC20 public tokenAddress;
@@ -79,7 +83,11 @@ contract EventDeployer is OwnableUpgradeable {
 
         approvedContracts[address(newCollection)] = false;
 
-        emit CollectionDetails(_collectionURI, block.timestamp);
+        emit CollectionDetails(
+            address(newCollection),
+            _collectionURI,
+            block.timestamp
+        );
 
         return address(newCollection);
     }
@@ -87,11 +95,15 @@ contract EventDeployer is OwnableUpgradeable {
     function approveContract(address contractAddress) public onlyOwner {
         approvedContracts[contractAddress] = true;
 
-        emit CollectionApproval(contractAddress, approvedContracts[contractAddress]);
+        emit CollectionApproval(
+            contractAddress,
+            approvedContracts[contractAddress]
+        );
     }
 
-    function viewApprovedContracts(address contractAddress) public view returns(bool)
-    {
+    function viewApprovedContracts(
+        address contractAddress
+    ) public view returns (bool) {
         return approvedContracts[contractAddress];
     }
 

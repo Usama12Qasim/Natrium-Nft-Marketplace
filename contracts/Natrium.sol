@@ -23,7 +23,9 @@ contract NatriumInternalCalculations is Initializable, OwnableUpgradeable
         
         uint totalNFTPrice = _nftPrice;
         uint ServiceFees = _marketplaceServiceFess(_nftPrice, _serviceFees);
+        //uint CreatorFees = _calculateAndSendCreatorEarning(_creator, _nftPrice, _percentage);
 
+        // totalNFTPrice = totalNFTPrice - (ServiceFees + CreatorFees);
         totalNFTPrice = totalNFTPrice - ServiceFees;
 
         payable(_seller).transfer(totalNFTPrice);
@@ -41,4 +43,12 @@ contract NatriumInternalCalculations is Initializable, OwnableUpgradeable
 
         return serviceFeeAmount;
     }
+
+    // function _calculateAndSendCreatorEarning(address _creator, uint256 _nftPrice, uint256 _percentage) internal returns(uint256)
+    // {
+    //     uint256 amountToSend = (_nftPrice * _percentage) / 100;
+    //     payable(_creator).transfer(amountToSend);
+
+    //     return amountToSend;
+    // }
 }

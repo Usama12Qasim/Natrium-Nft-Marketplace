@@ -60,6 +60,8 @@ contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
 
     /// @notice A mapping from tokenId to the metadata URI for each token.
     mapping(uint256 => string) private _tokenURIs;
+    mapping(address => bool) public isCreated;
+    mapping(uint256 => address) creators;
     
     /// @notice The next tokenId to be minted.
     uint256 private nextTokenId;
@@ -106,6 +108,8 @@ contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
         eventDetail.ticketStartBuyDate = _ticketStartBuyDate;
         eventDetail.ticketEndBuyDate = _ticketEndBuyDate;
 
+        isCreated[address(this)] = true;
+
         // Copy each ticket from memory to storage
         for (uint256 i = 0; i < _tickets.length; i++) {
             eventDetail.tickets.push(_tickets[i]);
@@ -148,6 +152,8 @@ contract EventTicket is Initializable, ERC721Upgradeable, OwnableUpgradeable {
         _safeMint(msg.sender, tokenId); // Mint the NFT with the new tokenId
         _setTokenURI(tokenId, _tokenURI); // Set the specific URI for this tokenId
         ticketInfo[tokenId] = selectedTicket;
+
+        creators[tokenId] = msg.sender;
 
     }
 
