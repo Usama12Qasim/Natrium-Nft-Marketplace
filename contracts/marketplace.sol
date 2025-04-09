@@ -56,10 +56,10 @@ contract NatirumMarketplace is
         string tokenUri,
         string CollectionUri,
         string TicketType,
-        uint256[] previousPrice,
+        uint256 previousPrice,
         uint256 currentPrice,
         uint256 NftExpire,
-        uint256[] timestamps
+        uint256 timestamps
     );
 
     event UnListNFT(
@@ -102,7 +102,7 @@ contract NatirumMarketplace is
         uint256 _price,
         uint256 _NftExpiration,
         address _hostContract
-    ) external nonReentrant{
+    ) external nonReentrant {
         require(_NftExpiration > block.timestamp, "Time Error");
 
         _listNft(_tokenId, _price, _NftExpiration, _hostContract);
@@ -172,9 +172,9 @@ contract NatirumMarketplace is
             string memory,
             string memory,
             string memory,
-            uint256[] memory previousPrices,
+            uint256 previousPrices,
             uint256,
-            uint256[] memory timestamps
+            uint256 timestamps
         )
     {
         NftDetails memory info = nftInfo[hostContract][tokenId];
@@ -187,14 +187,18 @@ contract NatirumMarketplace is
         string memory TicketType = info.TicketType;
         uint256 NftExpire = info.Expiration;
         address Seller = info.seller;
-        previousPrices = priceHistory[hostContract][tokenId];
-        timestamps = priceTimestamps[hostContract][tokenId];
 
-        if (previousPrices.length > 0) {
-            currentPrice = previousPrices[previousPrices.length - 1];
-        } else {
-            currentPrice = 0; // No price history available
-        }
+        previousPrices = (priceHistory[hostContract][tokenId].length >= 2)
+            ? priceHistory[hostContract][tokenId][
+                priceHistory[hostContract][tokenId].length - 2
+            ]
+            : 0;
+
+        timestamps = (priceTimestamps[hostContract][tokenId].length >= 2)
+            ? priceTimestamps[hostContract][tokenId][
+                priceTimestamps[hostContract][tokenId].length - 2
+            ]
+            : 0;
 
         emit GetNft(
             Seller,
@@ -220,7 +224,10 @@ contract NatirumMarketplace is
         );
     }
 
-    function unListNft(uint256 _tokenId, address _hostContract) external nonReentrant{
+    function unListNft(
+        uint256 _tokenId,
+        address _hostContract
+    ) external nonReentrant {
         NftDetails memory info = nftInfo[_hostContract][_tokenId];
         EventTicket hostContract = EventTicket(_hostContract);
 
@@ -238,7 +245,10 @@ contract NatirumMarketplace is
         delete nftInfo[_hostContract][_tokenId];
     }
 
-    function buyNft(uint256 _tokenId, address hostContract) external payable nonReentrant{
+    function buyNft(
+        uint256 _tokenId,
+        address hostContract
+    ) external payable nonReentrant {
         NftDetails memory info = nftInfo[hostContract][_tokenId];
         uint256 NftPrice = info.nftPrice;
         address _hostContract = info.hostContract;
@@ -272,7 +282,7 @@ contract NatirumMarketplace is
         address hostContract,
         uint256 _offerPrice,
         uint256 _offerExpiry
-    ) external payable nonReentrant{
+    ) external payable nonReentrant {
         OfferDetails storage details = offererInfo[msg.sender][_tokenId];
         NftDetails memory info = nftInfo[hostContract][_tokenId];
 
@@ -297,7 +307,7 @@ contract NatirumMarketplace is
         uint256 _tokenId,
         address _buyer,
         address hostContract
-    ) external nonReentrant{
+    ) external nonReentrant {
         NftDetails memory info = nftInfo[hostContract][_tokenId];
         OfferDetails memory details = offererInfo[_buyer][_tokenId];
 

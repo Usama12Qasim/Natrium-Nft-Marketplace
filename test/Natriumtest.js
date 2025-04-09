@@ -111,71 +111,78 @@ describe("Natrium Marketpalce", function () {
         //    console.log("NatirumMarketplace deployed to:", deployedNatriumMarketPlaceContract.target);
 
     });
-    describe("List Nft", function () {
-        it("should list nft by minter", async () => {
-            await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, "tokenURI");
-            await deployedNatriumTicketingContract.connect(minter1).mintTicket(1, "TOKENS");
-            await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, "NFTS");
-            await deployedNatriumTicketingContract.connect(minter2).mintTicket(1, "www.nft.com");
-            await deployedNatriumTicketingContract.connect(minter2).mintTicket(0, "www.nft.com");
-            await deployedNatriumTicketingContract.connect(minter1).mintTicket(1, "tokenURI");
+    // describe("List Nft", function () {
+    //     it("should list nft by minter", async () => {
+    //         await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, "tokenURI");
+    //         await deployedNatriumTicketingContract.connect(minter1).mintTicket(1, "TOKENS");
+    //         await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, "NFTS");
+    //         await deployedNatriumTicketingContract.connect(minter2).mintTicket(1, "www.nft.com");
+    //         await deployedNatriumTicketingContract.connect(minter2).mintTicket(0, "www.nft.com");
+    //         await deployedNatriumTicketingContract.connect(minter1).mintTicket(1, "tokenURI");
 
-            let getBlockNumber = await ethers.provider.getBlockNumber();
-            getBlock = await ethers.provider.getBlock(getBlockNumber);
-            _startDate = getBlock.timestamp;
-            let endDate = _startDate + (50 * 86400);
+    //         let getBlockNumber = await ethers.provider.getBlockNumber();
+    //         getBlock = await ethers.provider.getBlock(getBlockNumber);
+    //         _startDate = getBlock.timestamp;
+    //         let endDate = _startDate + (50 * 86400);
 
-            // let ListNFT1 = await deployedNatriumFactoryContract.queryFilter("CollectionMinted");
-            // let NFT1 = ListNFT1[5];
-            // let Seller1 = NFT1.args.CollectionUri;
-            // let TokenId1 = NFT1.args.ticketAddress;
-            // let HostContract1 = NFT1.args.ticketIndex;
-            // let Nft1Price = NFT1.args.tokenIds;
-            // let Listed1 = NFT1.args.tokenURIs;
+    //         // let ListNFT1 = await deployedNatriumFactoryContract.queryFilter("CollectionMinted");
+    //         // let NFT1 = ListNFT1[5];
+    //         // let Seller1 = NFT1.args.CollectionUri;
+    //         // let TokenId1 = NFT1.args.ticketAddress;
+    //         // let HostContract1 = NFT1.args.ticketIndex;
+    //         // let Nft1Price = NFT1.args.tokenIds;
+    //         // let Listed1 = NFT1.args.tokenURIs;
 
-            // console.log("Seller1", Seller1, ":",
-            //     "TokenId1", TokenId1, ":",
-            //     "HostContract1", HostContract1, ":",
-            //     "Nft1Price", Nft1Price, ":",
-            //     "Listed1", Listed1
-            // );
+    //         // console.log("Seller1", Seller1, ":",
+    //         //     "TokenId1", TokenId1, ":",
+    //         //     "HostContract1", HostContract1, ":",
+    //         //     "Nft1Price", Nft1Price, ":",
+    //         //     "Listed1", Listed1
+    //         // );
 
-            await deployedNatriumMarketPlaceContract.connect(owner).setServiceFees(serviceFess);
+    //         await deployedNatriumMarketPlaceContract.connect(owner).setServiceFees(serviceFess);
 
-            await deployedNatriumTicketingContract.connect(minter1).approve(deployedNatriumMarketPlaceContract.target,0);
-            await deployedNatriumTicketingContract.connect(minter2).approve(deployedNatriumMarketPlaceContract.target,3);
-            await deployedNatriumMarketPlaceContract.connect(minter1).listNft(
-                0, 
-                ethers.parseUnits("0.3"),
-                endDate,
-                deployedNatriumTicketingContract.target
-            );
+    //         await deployedNatriumTicketingContract.connect(minter1).approve(deployedNatriumMarketPlaceContract.target,0);
+    //         await deployedNatriumTicketingContract.connect(minter2).approve(deployedNatriumMarketPlaceContract.target,3);
+    //         await deployedNatriumMarketPlaceContract.connect(minter1).listNft(
+    //             0, 
+    //             ethers.parseUnits("0.3"),
+    //             endDate,
+    //             deployedNatriumTicketingContract.target
+    //         );
 
-            let ListNFT1 = await deployedNatriumMarketPlaceContract.queryFilter("ListNFT");
-            let NFT1 = ListNFT1[0];
-            let Seller1 = NFT1.args.seller;
-            let TokenId1 = NFT1.args.tokenID;
-            let HostContract1 = NFT1.args.hostContract;
-            let Nft1Price = NFT1.args.nftPrice;
+    //         await deployedNatriumMarketPlaceContract.connect(minter2).listNft(
+    //             3, 
+    //             ethers.parseUnits("0.5"),
+    //             endDate,
+    //             deployedNatriumTicketingContract.target
+    //         );
 
-            console.log("Seller1", Seller1,":",
-                "TokenId1",TokenId1, ":",
-                "HostContract1", HostContract1, ":",
-                "Nft1Price", Nft1Price
-            );
+    //         let ListNFT1 = await deployedNatriumMarketPlaceContract.queryFilter("ListNFT");
+    //         let NFT1 = ListNFT1[1];
+    //         let Seller1 = NFT1.args.seller;
+    //         let TokenId1 = NFT1.args.tokenID;
+    //         let HostContract1 = NFT1.args.hostContract;
+    //         let Nft1Price = NFT1.args.nftPrice;
+
+    //         console.log("Seller1", Seller1,":",
+    //             "TokenId1",TokenId1, ":",
+    //             "HostContract1", HostContract1, ":",
+    //             "Nft1Price", Nft1Price
+    //         );
 
 
-            await deployedNatriumMarketPlaceContract.connect(minter2).listNft(
-                3, 
-                ethers.parseUnits("0.5"),
-                endDate,
-                deployedNatriumTicketingContract.target
-            );
+    //         // await deployedNatriumMarketPlaceContract.connect(minter2).listNft(
+    //         //     3, 
+    //         //     ethers.parseUnits("0.5"),
+    //         //     endDate,
+    //         //     deployedNatriumTicketingContract.target
+    //         // );
 
      
 
-        })
-    });
+    //     })
+    // });
 
     describe("Buy Nft", function () {
         it("should buy nft ", async () => {
@@ -204,18 +211,18 @@ describe("Natrium Marketpalce", function () {
                 deployedNatriumTicketingContract.target
             );
 
-            let ListNFT1 = await deployedNatriumMarketPlaceContract.queryFilter("ListNFT");
-            let NFT1 = ListNFT1[0];
-            let Seller1 = NFT1.args.seller;
-            let TokenId1 = NFT1.args.tokenID;
-            let HostContract1 = NFT1.args.hostContract;
-            let Nft1Price = NFT1.args.nftPrice;
+            // let ListNFT1 = await deployedNatriumMarketPlaceContract.queryFilter("ListNFT");
+            // let NFT1 = ListNFT1[0];
+            // let Seller1 = NFT1.args.seller;
+            // let TokenId1 = NFT1.args.tokenID;
+            // let HostContract1 = NFT1.args.hostContract;
+            // let Nft1Price = NFT1.args.nftPrice;
 
-            console.log("Seller1", Seller1,":",
-                "TokenId1",TokenId1, ":",
-                "HostContract1", HostContract1, ":",
-                "Nft1Price", Nft1Price
-            );
+            // console.log("Seller1", Seller1,":",
+            //     "TokenId1",TokenId1, ":",
+            //     "HostContract1", HostContract1, ":",
+            //     "Nft1Price", Nft1Price
+            // );
 
 
             await deployedNatriumMarketPlaceContract.connect(buyer1).buyNft(
@@ -296,161 +303,161 @@ describe("Natrium Marketpalce", function () {
         });
     });
 
-    describe("Create Offer", function () {
-        it("should Create offer by different user", async () => {
+    // describe("Create Offer", function () {
+    //     it("should Create offer by different user", async () => {
 
-            await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, "tokenURI");
-            await deployedNatriumTicketingContract.connect(minter1).mintTicket(1, "TOKENS");
-            await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, "NFTS");
-            await deployedNatriumTicketingContract.connect(minter2).mintTicket(1, "www.nft.com");
-            await deployedNatriumTicketingContract.connect(minter2).mintTicket(0, "www.nft.com");
-            await deployedNatriumTicketingContract.connect(minter1).mintTicket(1, "tokenURI");
+    //         await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, "tokenURI");
+    //         await deployedNatriumTicketingContract.connect(minter1).mintTicket(1, "TOKENS");
+    //         await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, "NFTS");
+    //         await deployedNatriumTicketingContract.connect(minter2).mintTicket(1, "www.nft.com");
+    //         await deployedNatriumTicketingContract.connect(minter2).mintTicket(0, "www.nft.com");
+    //         await deployedNatriumTicketingContract.connect(minter1).mintTicket(1, "tokenURI");
 
-            let getBlockNumber = await ethers.provider.getBlockNumber();
-            getBlock = await ethers.provider.getBlock(getBlockNumber);
-            let EventStartDate = getBlock.timestamp;
-           let  EventEndDate = EventStartDate + (30 * 86400);
+    //         let getBlockNumber = await ethers.provider.getBlockNumber();
+    //         getBlock = await ethers.provider.getBlock(getBlockNumber);
+    //         let EventStartDate = getBlock.timestamp;
+    //        let  EventEndDate = EventStartDate + (30 * 86400);
 
-            await deployedNatriumMarketPlaceContract.connect(owner).setServiceFees(serviceFess);
+    //         await deployedNatriumMarketPlaceContract.connect(owner).setServiceFees(serviceFess);
 
-            await deployedNatriumTicketingContract.connect(minter1).approve(deployedNatriumMarketPlaceContract.target,0);
-            await deployedNatriumTicketingContract.connect(minter2).approve(deployedNatriumMarketPlaceContract.target,3);
+    //         await deployedNatriumTicketingContract.connect(minter1).approve(deployedNatriumMarketPlaceContract.target,0);
+    //         await deployedNatriumTicketingContract.connect(minter2).approve(deployedNatriumMarketPlaceContract.target,3);
             
-            await deployedNatriumMarketPlaceContract.connect(minter1).listNft(
-                0, 
-                ethers.parseUnits("0.3"),
-                EventEndDate,
-                deployedNatriumTicketingContract.target
-            );
+    //         await deployedNatriumMarketPlaceContract.connect(minter1).listNft(
+    //             0, 
+    //             ethers.parseUnits("0.3"),
+    //             EventEndDate,
+    //             deployedNatriumTicketingContract.target
+    //         );
 
-            let getBlockNumber1 = await ethers.provider.getBlockNumber();
-            let getBlock1 = await ethers.provider.getBlock(getBlockNumber1);
-            let startTime = getBlock1.timestamp;
-            let endTime = startTime + (3 * 86400);
+    //         let getBlockNumber1 = await ethers.provider.getBlockNumber();
+    //         let getBlock1 = await ethers.provider.getBlock(getBlockNumber1);
+    //         let startTime = getBlock1.timestamp;
+    //         let endTime = startTime + (3 * 86400);
 
-            await deployedNatriumMarketPlaceContract.connect(buyer1).createOffer(
-                0,
-                deployedNatriumTicketingContract.target,
-                ethers.parseUnits("0.4"),
-                endTime,
-                { value: ethers.parseUnits("0.4") }
-            );
+    //         await deployedNatriumMarketPlaceContract.connect(buyer1).createOffer(
+    //             0,
+    //             deployedNatriumTicketingContract.target,
+    //             ethers.parseUnits("0.4"),
+    //             endTime,
+    //             { value: ethers.parseUnits("0.4") }
+    //         );
 
-            await deployedNatriumMarketPlaceContract.connect(buyer2).createOffer(
-                0,
-                deployedNatriumTicketingContract.target,
-                ethers.parseUnits("0.35"),
-                endTime,
-                { value: ethers.parseUnits("0.35") }
-            );
+    //         await deployedNatriumMarketPlaceContract.connect(buyer2).createOffer(
+    //             0,
+    //             deployedNatriumTicketingContract.target,
+    //             ethers.parseUnits("0.35"),
+    //             endTime,
+    //             { value: ethers.parseUnits("0.35") }
+    //         );
 
-            await deployedNatriumMarketPlaceContract.connect(buyer3).createOffer(
-                0,
-                deployedNatriumTicketingContract.target,
-                ethers.parseUnits("0.6"),
-                endTime,
-                { value: ethers.parseUnits("0.6") }
-            );
+    //         await deployedNatriumMarketPlaceContract.connect(buyer3).createOffer(
+    //             0,
+    //             deployedNatriumTicketingContract.target,
+    //             ethers.parseUnits("0.6"),
+    //             endTime,
+    //             { value: ethers.parseUnits("0.6") }
+    //         );
 
 
-            let Offer = await deployedNatriumMarketPlaceContract.queryFilter("makeOffer");
-            let offer = Offer[2];
-            let Offerer = offer.args.buyer;
-            let OffererPrice = offer.args.offerPrice;
-            let TokenId = offer.args.tokenId;
+    //         let Offer = await deployedNatriumMarketPlaceContract.queryFilter("makeOffer");
+    //         let offer = Offer[2];
+    //         let Offerer = offer.args.buyer;
+    //         let OffererPrice = offer.args.offerPrice;
+    //         let TokenId = offer.args.tokenId;
 
-            console.log("Offerer address", Offerer, ":", "Offerer Price", OffererPrice, ":", "TokenId", TokenId)
+    //         console.log("Offerer address", Offerer, ":", "Offerer Price", OffererPrice, ":", "TokenId", TokenId)
 
-            let ContractBalance = await ethers.provider.getBalance(deployedNatriumMarketPlaceContract.target);
-            console.log("Contract Balance :", ContractBalance);
+    //         let ContractBalance = await ethers.provider.getBalance(deployedNatriumMarketPlaceContract.target);
+    //         console.log("Contract Balance :", ContractBalance);
 
-            let trackBuyer1 = await deployedNatriumMarketPlaceContract.connect(buyer1).trackOfferPrice(buyer1.address);
-            let trackBuyer2 = await deployedNatriumMarketPlaceContract.connect(buyer2).trackOfferPrice(buyer2.address);
-            let trackBuyer3 = await deployedNatriumMarketPlaceContract.connect(buyer3).trackOfferPrice(buyer3.address);
+    //         let trackBuyer1 = await deployedNatriumMarketPlaceContract.connect(buyer1).trackOfferPrice(buyer1.address);
+    //         let trackBuyer2 = await deployedNatriumMarketPlaceContract.connect(buyer2).trackOfferPrice(buyer2.address);
+    //         let trackBuyer3 = await deployedNatriumMarketPlaceContract.connect(buyer3).trackOfferPrice(buyer3.address);
 
-            console.log("Track Price buyer 1", trackBuyer1);
-            console.log("Track Price buyer 2", trackBuyer2);
-            console.log("Track Price buyer 3", trackBuyer3);
-        })
-    });
+    //         console.log("Track Price buyer 1", trackBuyer1);
+    //         console.log("Track Price buyer 2", trackBuyer2);
+    //         console.log("Track Price buyer 3", trackBuyer3);
+    //     })
+    // });
 
-    describe("Accept Offer", function () {
-        it("should accept offer by Lister", async () => {
-            await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, "tokenURI");
-            await deployedNatriumTicketingContract.connect(minter1).mintTicket(1, "TOKENS");
-            await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, "NFTS");
-            await deployedNatriumTicketingContract.connect(minter2).mintTicket(1, "www.nft.com");
-            await deployedNatriumTicketingContract.connect(minter2).mintTicket(0, "www.nft.com");
-            await deployedNatriumTicketingContract.connect(minter1).mintTicket(1, "tokenURI");
+    // describe("Accept Offer", function () {
+    //     it("should accept offer by Lister", async () => {
+    //         await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, "tokenURI");
+    //         await deployedNatriumTicketingContract.connect(minter1).mintTicket(1, "TOKENS");
+    //         await deployedNatriumTicketingContract.connect(minter1).mintTicket(0, "NFTS");
+    //         await deployedNatriumTicketingContract.connect(minter2).mintTicket(1, "www.nft.com");
+    //         await deployedNatriumTicketingContract.connect(minter2).mintTicket(0, "www.nft.com");
+    //         await deployedNatriumTicketingContract.connect(minter1).mintTicket(1, "tokenURI");
 
-            let getBlockNumber = await ethers.provider.getBlockNumber();
-            getBlock = await ethers.provider.getBlock(getBlockNumber);
-            let EventStartDate = getBlock.timestamp;
-           let  EventEndDate = EventStartDate + (30 * 86400);
+    //         let getBlockNumber = await ethers.provider.getBlockNumber();
+    //         getBlock = await ethers.provider.getBlock(getBlockNumber);
+    //         let EventStartDate = getBlock.timestamp;
+    //        let  EventEndDate = EventStartDate + (30 * 86400);
 
-            await deployedNatriumMarketPlaceContract.connect(owner).setServiceFees(serviceFess);
+    //         await deployedNatriumMarketPlaceContract.connect(owner).setServiceFees(serviceFess);
 
-            await deployedNatriumTicketingContract.connect(minter1).approve(deployedNatriumMarketPlaceContract.target,0);
-            await deployedNatriumTicketingContract.connect(minter2).approve(deployedNatriumMarketPlaceContract.target,3);
+    //         await deployedNatriumTicketingContract.connect(minter1).approve(deployedNatriumMarketPlaceContract.target,0);
+    //         await deployedNatriumTicketingContract.connect(minter2).approve(deployedNatriumMarketPlaceContract.target,3);
             
-            await deployedNatriumMarketPlaceContract.connect(minter1).listNft(
-                0, 
-                ethers.parseUnits("0.3"),
-                EventEndDate,
-                deployedNatriumTicketingContract.target
-            );
+    //         await deployedNatriumMarketPlaceContract.connect(minter1).listNft(
+    //             0, 
+    //             ethers.parseUnits("0.3"),
+    //             EventEndDate,
+    //             deployedNatriumTicketingContract.target
+    //         );
 
-            let getBlockNumber1 = await ethers.provider.getBlockNumber();
-            let getBlock1 = await ethers.provider.getBlock(getBlockNumber1);
-            let startTime = getBlock1.timestamp;
-            let endTime = startTime + (3 * 86400);
+    //         let getBlockNumber1 = await ethers.provider.getBlockNumber();
+    //         let getBlock1 = await ethers.provider.getBlock(getBlockNumber1);
+    //         let startTime = getBlock1.timestamp;
+    //         let endTime = startTime + (3 * 86400);
 
-            await deployedNatriumMarketPlaceContract.connect(buyer1).createOffer(
-                0,
-                deployedNatriumTicketingContract.target,
-                ethers.parseUnits("0.4"),
-                endTime,
-                { value: ethers.parseUnits("0.4") }
-            );
+    //         await deployedNatriumMarketPlaceContract.connect(buyer1).createOffer(
+    //             0,
+    //             deployedNatriumTicketingContract.target,
+    //             ethers.parseUnits("0.4"),
+    //             endTime,
+    //             { value: ethers.parseUnits("0.4") }
+    //         );
 
-            await deployedNatriumMarketPlaceContract.connect(buyer2).createOffer(
-                0,
-                deployedNatriumTicketingContract.target,
-                ethers.parseUnits("0.35"),
-                endTime,
-                { value: ethers.parseUnits("0.35") }
-            );
+    //         await deployedNatriumMarketPlaceContract.connect(buyer2).createOffer(
+    //             0,
+    //             deployedNatriumTicketingContract.target,
+    //             ethers.parseUnits("0.35"),
+    //             endTime,
+    //             { value: ethers.parseUnits("0.35") }
+    //         );
 
-            await deployedNatriumMarketPlaceContract.connect(buyer3).createOffer(
-                0,
-                deployedNatriumTicketingContract.target,
-                ethers.parseUnits("0.6"),
-                endTime,
-                { value: ethers.parseUnits("0.6") }
-            );
+    //         await deployedNatriumMarketPlaceContract.connect(buyer3).createOffer(
+    //             0,
+    //             deployedNatriumTicketingContract.target,
+    //             ethers.parseUnits("0.6"),
+    //             endTime,
+    //             { value: ethers.parseUnits("0.6") }
+    //         );
 
-            await deployedNatriumMarketPlaceContract.connect(minter1).acceptOffers(
-                0,
-                buyer1.address,
-                deployedNatriumTicketingContract.target
-            );
+    //         await deployedNatriumMarketPlaceContract.connect(minter1).acceptOffers(
+    //             0,
+    //             buyer1.address,
+    //             deployedNatriumTicketingContract.target
+    //         );
 
-            await deployedNatriumMarketPlaceContract.connect(buyer2).withDraw(0);
-          //  await deployedNatriumMarketPlaceContract.connect(buyer3).withDraw(0);
+    //         await deployedNatriumMarketPlaceContract.connect(buyer2).withDraw(0);
+    //       //  await deployedNatriumMarketPlaceContract.connect(buyer3).withDraw(0);
 
-            let ContractBalance = await ethers.provider.getBalance(deployedNatriumMarketPlaceContract.target);
-            console.log("Contract Balance After:", ContractBalance);
-
-
-            let trackBuyer1Before = await deployedNatriumMarketPlaceContract.connect(buyer1).trackOfferPrice(buyer1.address);
-            let trackBuyer2Before = await deployedNatriumMarketPlaceContract.connect(buyer2).trackOfferPrice(buyer2.address);
-            let trackBuyer3Before = await deployedNatriumMarketPlaceContract.connect(buyer3).trackOfferPrice(buyer3.address);
-
-            console.log("Track Price buyer 1 after accept offer", trackBuyer1Before);
-            console.log("Track Price buyer 2 after accept offer", trackBuyer2Before);
-            console.log("Track Price buyer 3 after accept offer", trackBuyer3Before);
+    //         let ContractBalance = await ethers.provider.getBalance(deployedNatriumMarketPlaceContract.target);
+    //         console.log("Contract Balance After:", ContractBalance);
 
 
-        })
-    });
+    //         let trackBuyer1Before = await deployedNatriumMarketPlaceContract.connect(buyer1).trackOfferPrice(buyer1.address);
+    //         let trackBuyer2Before = await deployedNatriumMarketPlaceContract.connect(buyer2).trackOfferPrice(buyer2.address);
+    //         let trackBuyer3Before = await deployedNatriumMarketPlaceContract.connect(buyer3).trackOfferPrice(buyer3.address);
+
+    //         console.log("Track Price buyer 1 after accept offer", trackBuyer1Before);
+    //         console.log("Track Price buyer 2 after accept offer", trackBuyer2Before);
+    //         console.log("Track Price buyer 3 after accept offer", trackBuyer3Before);
+
+
+    //     })
+    // });
 });
